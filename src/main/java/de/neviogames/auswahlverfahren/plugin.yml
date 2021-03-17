@@ -1,0 +1,13 @@
+name: Auswahlverfahren
+authors: [Nevio, Nocti]
+version: 0.0.1
+description: Auswahlverfahren fuer Events
+website: https://neviogames.de
+main: de.neviogames.auswahlverfahren.main.awv
+depend: [NGLib]
+prefix: AWV
+commands:
+  auswahl:
+  awv:
+  joinEvent:
+  leaveEvent:
