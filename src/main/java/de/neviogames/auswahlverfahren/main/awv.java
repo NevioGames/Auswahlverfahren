@@ -62,8 +62,11 @@ public class awv extends JavaPlugin {
         getCommand(command.auswahl).setExecutor(new auswahlCommand());
         getCommand(command.auswahl).setTabCompleter(new auswahlCommand());
         getCommand(command.awv).setExecutor(new reloadCommand());
+        getCommand(command.awv).setTabCompleter(new reloadCommand());
         getCommand(command.joinEvent).setExecutor(new JoinCommand());
+        getCommand(command.joinEvent).setTabCompleter(new JoinCommand());
         getCommand(command.leaveEvent).setExecutor(new LeaveCommand());
+        getCommand(command.leaveEvent).setTabCompleter(new LeaveCommand());
 
     }
 
