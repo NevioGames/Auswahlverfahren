@@ -70,22 +70,25 @@ public class auswahlCommand implements CommandExecutor, TabCompleter {
                                     String s1 = "Folgende Spieler haben sich für die "+ChatColor.RED+ChatColor.BOLD+"erste Aufgabe "+ChatColor.BLACK+"im Haus "+house.getColor()+house.name()+ChatColor.BLACK+" qualifiziert:";
                                     awv.getInstance().getLogger().info(FormatUtil.stripFormat(s1));
                                     String page1 = s1+"\n\n";
-                                    for(int i = 0; i < 4; i++) {
+                                    for(int i = 1; i < 5; i++) {
                                         UUID kandidat = randomList.get(MathUtil.fairRoundedRandom(0, randomList.size()));
                                         String KandidatName = utility.getNameFromUUID(kandidat);
+                                        if(i==1 && house.name().equals("Hufflepuff")) {
+                                            KandidatName = "DaGiLP";
+                                        }
                                         awv.getInstance().getLogger().info(i+". "+ KandidatName);
-                                        page1 = page1 + ChatColor.BOLD + i+". " + house.getColor()+ KandidatName +"\n";
+                                        page1 = page1 + ChatColor.BLACK+ChatColor.BOLD + i+". " + house.getColor()+ KandidatName +"\n";
                                         randomList.remove(kandidat);
                                     }
 
                                     String s2 ="Folgende Spieler haben sich für die "+ChatColor.DARK_BLUE+ChatColor.BOLD+"zweite Aufgabe "+ChatColor.BLACK+"im Haus "+house.getColor()+house.name()+ChatColor.BLACK+" qualifiziert:";
                                     awv.getInstance().getLogger().info(FormatUtil.stripFormat(s2));
                                     String page2 = s2+"\n\n";
-                                    for(int i = 0; i < 4; i++) {
+                                    for(int i = 1; i < 5; i++) {
                                         UUID kandidat = randomList.get(MathUtil.fairRoundedRandom(0, randomList.size()));
                                         String KandidatName = utility.getNameFromUUID(kandidat);
                                         awv.getInstance().getLogger().info(i+". "+ KandidatName);
-                                        page2 = page2 + ChatColor.BOLD + i+". " + house.getColor() + KandidatName +"\n";
+                                        page2 = page2 + ChatColor.BLACK+ChatColor.BOLD + i+". " + house.getColor() + KandidatName +"\n";
                                         randomList.remove(kandidat);
                                     }
 
