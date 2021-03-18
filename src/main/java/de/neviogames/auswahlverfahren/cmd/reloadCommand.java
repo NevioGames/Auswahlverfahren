@@ -52,4 +52,20 @@ public class reloadCommand implements CommandExecutor {
         }
         return false;
     }
+
+    //EXECUTE TAB-COMPLETE
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+      if (cmd.getName().equalsIgnoreCase(command.awv)){
+          List <String> complitation = new ArrayList<>();
+          List <String> nextArgs = new ArrayList<>();
+          if (sender.hasPermission(perm.reload)){
+              if (args.length==1){
+                  nextArgs.add(argument.reload);
+                  StringUtil.copyPartialMatches(args[0], nextArgs,complitation);
+            } return complitation;
+        }
+    }
+        return Collections.emptyList();
+    }
 }

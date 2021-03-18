@@ -11,21 +11,26 @@ import de.neviogames.nglib.utils.io.MathUtil;
 import de.neviogames.nglib.utils.io.sendMessage;
 import de.neviogames.nglib.utils.misc.FormatUtil;
 import de.neviogames.nglib.utils.utility;
+import de.neviogames.auswahlverfahren.utils.Configuration;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
-public class auswahlCommand implements CommandExecutor {
+public class auswahlCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -40,6 +45,10 @@ public class auswahlCommand implements CommandExecutor {
                 if(sender instanceof Player) {
                     Player p = (Player) sender;
                     if(utility.isAdmin(p) && utility.isWizard(p)) {
+                        if(!Configuration.getInstance().isEnabled()) {
+                            sender.sendMessage(awv.getPrefix() + "Es gibt zurzeit kein Event.");
+                        }
+
                         if(args.length < 2) {
                             sendMessage.lessArgs(sender, awv.getPrefix());
                             return false;
@@ -58,7 +67,7 @@ public class auswahlCommand implements CommandExecutor {
 
                                 ArrayList<UUID> randomList = randomizer.randomlist(house, eingabezahl);
                                 if(randomList.size() >= 8) {
-                                    String s1 = "Folgende Spieler haben sich für die "+ChatColor.RED+ChatColor.BOLD+"erste Aufgabe "+ChatColor.BLACK+" im Haus "+house.getColor()+house.name()+ChatColor.BLACK+" qualifiziert:";
+                                    String s1 = "Folgende Spieler haben sich für die "+ChatColor.RED+ChatColor.BOLD+"erste Aufgabe "+ChatColor.BLACK+"im Haus "+house.getColor()+house.name()+ChatColor.BLACK+" qualifiziert:";
                                     awv.getInstance().getLogger().info(FormatUtil.stripFormat(s1));
                                     String page1 = s1+"\n\n";
                                     for(int i = 0; i < 4; i++) {
@@ -69,7 +78,7 @@ public class auswahlCommand implements CommandExecutor {
                                         randomList.remove(kandidat);
                                     }
 
-                                    String s2 ="Folgende Spieler haben sich für die "+ChatColor.DARK_BLUE+ChatColor.BOLD+"zweite Aufgabe "+ChatColor.BLACK+" im Haus "+house.getColor()+house.name()+ChatColor.BLACK+" qualifiziert:";
+                                    String s2 ="Folgende Spieler haben sich für die "+ChatColor.DARK_BLUE+ChatColor.BOLD+"zweite Aufgabe "+ChatColor.BLACK+"im Haus "+house.getColor()+house.name()+ChatColor.BLACK+" qualifiziert:";
                                     awv.getInstance().getLogger().info(FormatUtil.stripFormat(s2));
                                     String page2 = s2+"\n\n";
                                     for(int i = 0; i < 4; i++) {
@@ -134,5 +143,34 @@ public class auswahlCommand implements CommandExecutor {
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
+    }
+
+
+    //EXECUTE TAB-COMPLETE
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+        if(cmd.getName().equalsIgnoreCase(command.auswahl)) {
+            List<String> completions = new ArrayList<>();
+            List<String> nextArgs = new ArrayList<>();
+            if(sender.hasPermission(perm.auswahl)) {
+                if(args.length == 1) {
+                    nextArgs.add(argument.Gryffindor);
+                    nextArgs.add(argument.Hufflepuff);
+                    nextArgs.add(argument.Slytherin);
+                    nextArgs.add(argument.Ravenclaw);
+                    StringUtil.copyPartialMatches(args[0], nextArgs, completions);
+
+                } else if(args.length == 2) {
+                    nextArgs.add("1");
+                    nextArgs.add("5");
+                    nextArgs.add("7");
+                    StringUtil.copyPartialMatches(args[1], nextArgs, completions);
+                }
+            }
+
+            Collections.sort(completions);
+            return completions;
+        }
+        return Collections.emptyList();
     }
 }

@@ -60,6 +60,7 @@ public class awv extends JavaPlugin {
 
     private void registerCMD() {
         getCommand(command.auswahl).setExecutor(new auswahlCommand());
+        getCommand(command.auswahl).setTabCompleter(new auswahlCommand());
         getCommand(command.awv).setExecutor(new reloadCommand());
         getCommand(command.joinEvent).setExecutor(new JoinCommand());
         getCommand(command.leaveEvent).setExecutor(new LeaveCommand());

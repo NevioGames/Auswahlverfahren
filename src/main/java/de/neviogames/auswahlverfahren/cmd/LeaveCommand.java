@@ -62,4 +62,11 @@ public class LeaveCommand implements CommandExecutor {
 
         return false;
     }
+
+
+    //EXECUTE TAB-COMPLETE
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+       return Collections.emptyList();
+    }
 }

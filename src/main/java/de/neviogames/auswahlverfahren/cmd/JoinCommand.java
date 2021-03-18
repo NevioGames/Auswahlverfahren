@@ -78,4 +78,20 @@ public class JoinCommand implements CommandExecutor {
     }
 
 
+    //EXECUTE TAB-COMPLETE
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+        if (cmd.getName().equalsIgnoreCase(command.joinEvent)){
+             List<String> completions = new java.util.ArrayList<>();
+            List<String> nextArgs = new ArrayList<>();
+
+            if (sender.hasPermission(perm.joinEvent)){
+                if(args.length ==1){
+                    nextArgs.add(sender.getName());}
+                StringUtil.copyPartialMatches(args[0], nextArgs, completions);
+
+            }return completions;
+        }
+        return Collections.emptyList();
+    }
 }
