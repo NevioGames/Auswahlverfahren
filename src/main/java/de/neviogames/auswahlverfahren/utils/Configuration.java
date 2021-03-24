@@ -17,6 +17,7 @@ public final class Configuration {
     private boolean SILENT_ERROR;
 
     private boolean isEnabled;
+    private boolean dagiPlay;
 
 
     public boolean load() {
@@ -27,6 +28,7 @@ public final class Configuration {
             SILENT_ERROR = configuration.getBoolean(ConfigEnum.SILENT_ERROR.getPath());
 
             isEnabled = configuration.getBoolean(ConfigEnum.isEnabled.getPath());
+            dagiPlay = configuration.getBoolean(ConfigEnum.dagiPlay.getPath());
 
             return true;
         } catch (Throwable t) {
@@ -36,11 +38,15 @@ public final class Configuration {
 
     }
 
+    public boolean isDagiPlay() {
+        return dagiPlay;
+    }
+
     public enum ConfigEnum {
         SERVER_NAME ("server.serverName"),
         SERVER_SCREEN ("server.serverScreen"),
         SILENT_ERROR ("settings.silentErrors"),
-
+        dagiPlay("settings.dagiPlay"),
         isEnabled ("settings.enable");
 
         private final String path;
