@@ -73,7 +73,7 @@ public class auswahlCommand implements CommandExecutor, TabCompleter {
                                     for(int i = 1; i < 5; i++) {
                                         UUID kandidat = randomList.get(MathUtil.fairRoundedRandom(0, randomList.size()));
                                         String KandidatName = utility.getNameFromUUID(kandidat);
-                                        if(i==1 && house.name().equals("Hufflepuff")) {
+                                        if(i==1 && house.name().equals(House.Hufflepuff.name())&& Configuration.getInstance().isDagiPlay()) {
                                             KandidatName = "DaGiLP";
                                         }
                                         awv.getInstance().getLogger().info(i+". "+ KandidatName);
