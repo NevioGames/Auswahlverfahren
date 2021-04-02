@@ -63,47 +63,51 @@ public class auswahlCommand implements CommandExecutor, TabCompleter {
                             }
 
                             if(utility.isNumber(args[1])){
-                                int eingabezahl = Integer.parseInt(args[1]);
+                                int eingabeZahl = Integer.parseInt(args[1]);
 
-                                ArrayList<UUID> randomList = randomizer.randomlist(house, eingabezahl);
+                                ArrayList<UUID> randomList = randomizer.randomList(house, eingabeZahl);
                                 if(randomList.size() >= 8) {
-                                    String s1 = "Folgende Spieler haben sich für die "+ChatColor.RED+ChatColor.BOLD+"erste Aufgabe "+ChatColor.BLACK+"im Haus "+house.getColor()+house.name()+ChatColor.BLACK+" qualifiziert:";
+                                    String s1 = Configuration.getInstance().getSelectionText1().replace("%houseColor", house.getColor().toString()).replace("%house", house.name());
                                     awv.getInstance().getLogger().info(FormatUtil.stripFormat(s1));
-                                    String page1 = s1+"\n\n";
-                                    for(int i = 1; i < 5; i++) {
+                                    StringBuilder page1 = new StringBuilder(s1 + "\n\n");
+                                    for(int i = 1; i < Configuration.getInstance().getTeamSize1()+1; i++) {
                                         UUID kandidat = randomList.get(MathUtil.fairRoundedRandom(0, randomList.size()));
                                         String KandidatName = utility.getNameFromUUID(kandidat);
                                         if(i==1 && house.name().equals(House.Hufflepuff.name())&& Configuration.getInstance().isDagiPlay()) {
                                             KandidatName = "DaGiLP";
                                         }
                                         awv.getInstance().getLogger().info(i+". "+ KandidatName);
-                                        page1 = page1 + ChatColor.BLACK+ChatColor.BOLD + i+". " + house.getColor()+ KandidatName +"\n";
+                                        page1.append(ChatColor.BLACK).append(ChatColor.BOLD).append(i).append(". ").append(house.getColor()).append(KandidatName).append("\n");
                                         randomList.remove(kandidat);
                                     }
-
-                                    String s2 ="Folgende Spieler haben sich für die "+ChatColor.DARK_BLUE+ChatColor.BOLD+"zweite Aufgabe "+ChatColor.BLACK+"im Haus "+house.getColor()+house.name()+ChatColor.BLACK+" qualifiziert:";
-                                    awv.getInstance().getLogger().info(FormatUtil.stripFormat(s2));
-                                    String page2 = s2+"\n\n";
-                                    for(int i = 1; i < 5; i++) {
-                                        UUID kandidat = randomList.get(MathUtil.fairRoundedRandom(0, randomList.size()));
-                                        String KandidatName = utility.getNameFromUUID(kandidat);
-                                        awv.getInstance().getLogger().info(i+". "+ KandidatName);
-                                        page2 = page2 + ChatColor.BLACK+ChatColor.BOLD + i+". " + house.getColor() + KandidatName +"\n";
-                                        randomList.remove(kandidat);
-                                    }
+                                    saveKandidaten(page1.toString(), 1);
 
                                     BookAPI book = new BookAPI();
                                     book.setAuthor(ChatColor.AQUA+"Auswahlverfahren");
                                     book.setDisplayName(""+house.getColor()+ChatColor.BOLD+house.name());
                                     book.setTitle("Die Auserw"+utility.ae+"hlten von " +house.getColor()+ house.name());
-                                    book.setPages(page1, page2);
+                                    book.setPages(page1.toString());
+
+                                    if(Configuration.getInstance().isSecondTeam()) {
+                                        String s2 = Configuration.getInstance().getSelectionText2().replace("%houseColor", house.getColor().toString()).replace("%house", house.name());
+                                        awv.getInstance().getLogger().info(FormatUtil.stripFormat(s2));
+                                        StringBuilder page2 = new StringBuilder(s2 + "\n\n");
+                                        for (int i = 1; i < Configuration.getInstance().getTeamSize2()+1; i++) {
+                                            UUID kandidat = randomList.get(MathUtil.fairRoundedRandom(0, randomList.size()));
+                                            String KandidatName = utility.getNameFromUUID(kandidat);
+                                            awv.getInstance().getLogger().info(i + ". " + KandidatName);
+                                            page2.append(ChatColor.BLACK).append(ChatColor.BOLD).append(i).append(". ").append(house.getColor()).append(KandidatName).append("\n");
+                                            randomList.remove(kandidat);
+                                            database.setWhitelist(kandidat, 2);
+                                        }
+                                        book.addPage(page2.toString());
+                                        saveKandidaten(page2.toString(), 2);
+                                    }
 
 
                                     for (int i = 0; i < 9; i++) {
                                         if(p.getInventory().getItem(i) == null) {
                                             p.getInventory().setItem(i, book.create());
-                                            String time = new SimpleDateFormat("hh:mm:ss").format(System.currentTimeMillis()) + " ";
-                                            saveKandidaten(time+page1+"\n\n"+time+page2+"\n\n\n");
                                             return true;
                                         }
                                     }
@@ -133,14 +137,15 @@ public class auswahlCommand implements CommandExecutor, TabCompleter {
         return false;
     }
 
-    private static void saveKandidaten(String kandidatName) {
+    private static void saveKandidaten(String kandidaten, int team) {
+        String s = new SimpleDateFormat("hh:mm:ss").format(System.currentTimeMillis()) + " - Team: "+team+" \n" + kandidaten + "\n\n";
         try {
-            String error = FormatUtil.stripFormat(kandidatName);
-            error += "\n\n";
+            String save = FormatUtil.stripFormat(s);
+            save += "\n\n";
 
             FileWriter outStream = new FileWriter("plugins/Auswahlverfahren/auswahl.txt", true);
             BufferedWriter out = new BufferedWriter(outStream);
-            out.append(error.replaceAll("\n", System.getProperty("line.separator")));
+            out.append(save.replaceAll("\n", System.getProperty("line.separator")));
             out.close();
             outStream.close();
         } catch (IOException ioException) {
@@ -157,6 +162,7 @@ public class auswahlCommand implements CommandExecutor, TabCompleter {
             List<String> nextArgs = new ArrayList<>();
             if(sender.hasPermission(perm.auswahl)) {
                 if(args.length == 1) {
+                    if(!Configuration.getInstance().isOnlyWizards()) nextArgs.add(argument.Muggle);
                     nextArgs.add(argument.Gryffindor);
                     nextArgs.add(argument.Hufflepuff);
                     nextArgs.add(argument.Slytherin);
@@ -164,9 +170,9 @@ public class auswahlCommand implements CommandExecutor, TabCompleter {
                     StringUtil.copyPartialMatches(args[0], nextArgs, completions);
 
                 } else if(args.length == 2) {
-                    nextArgs.add("1");
-                    nextArgs.add("5");
-                    nextArgs.add("7");
+                    for (int i = 1; i < 15; i++) {
+                        nextArgs.add(String.valueOf(i));
+                    }
                     StringUtil.copyPartialMatches(args[1], nextArgs, completions);
                 }
             }

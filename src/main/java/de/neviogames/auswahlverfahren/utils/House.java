@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 
 public enum House {
 
+    Muggle ("MUGGLE", ChatColor.GRAY),
     Gryffindor ("GRYFFINDOR", ChatColor.RED),
     Ravenclaw ("RAVENCLAW", ChatColor.BLUE),
     Hufflepuff ("HUFFLEPUFF", ChatColor.YELLOW),

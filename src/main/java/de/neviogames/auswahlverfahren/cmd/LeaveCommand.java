@@ -6,7 +6,6 @@ import de.neviogames.auswahlverfahren.utils.database;
 import de.neviogames.auswahlverfahren.utils.edits.command;
 import de.neviogames.auswahlverfahren.utils.edits.perm;
 import de.neviogames.nglib.utils.io.sendMessage;
-import de.neviogames.nglib.utils.utility;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -32,25 +31,21 @@ public class LeaveCommand implements CommandExecutor, TabCompleter {
                 if(sender.hasPermission(perm.leaveEvent)) {
                     if(sender instanceof Player) {
                         Player p = (Player) sender;
-                        if(utility.isWizard(p)) {
-                            if(args.length != 0) {
-                                sendMessage.manyArgs(sender, awv.getPrefix());
-                                return false;
-                            }
-
-                            if(database.exist(p.getUniqueId())) {
-                                UUID uuid = p.getUniqueId();
-
-                                database.remove(uuid);
-                                sender.sendMessage(awv.getPrefix() + "Du hast dich erfolgreich aus dem Event ausgetragen.");
-                                awv.getInstance().getLogger().info(uuid.toString() + " hat sich aus dem Event ausgetragen.");
-                            } else {
-                                sender.sendMessage(awv.getPrefix() + "Du nimmst nicht am Event teil.");
-                            }
-
-                        } else {
-                            sender.sendMessage(awv.getPrefix() + "Du musst ein Zauberer sein, um dich aus dem Event ausgetragen zu k"+utility.oe+"nnen.");
+                        if(args.length != 0) {
+                            sendMessage.manyArgs(sender, awv.getPrefix());
+                            return false;
                         }
+
+                        if(database.exist(p.getUniqueId())) {
+                            UUID uuid = p.getUniqueId();
+
+                            database.remove(uuid);
+                            sender.sendMessage(awv.getPrefix() + "Du hast dich erfolgreich aus dem Event ausgetragen.");
+                            awv.getInstance().getLogger().info(uuid.toString() + " hat sich aus dem Event ausgetragen.");
+                        } else {
+                            sender.sendMessage(awv.getPrefix() + "Du nimmst nicht am Event teil.");
+                        }
+
                     } else {
                         sendMessage.noPlayer(sender, awv.getPrefix());
                     }

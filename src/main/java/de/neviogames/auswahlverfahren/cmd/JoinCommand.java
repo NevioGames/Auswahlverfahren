@@ -31,9 +31,9 @@ public class JoinCommand implements CommandExecutor, TabCompleter {
 
         //EXECUTE COMMAND
         if(cmd.getName().equalsIgnoreCase(command.joinEvent)) {
-            if(Configuration.getInstance().isEnabled()) {
-                if(sender.hasPermission(perm.joinEvent)) {
-                    if(sender instanceof Player) {
+            if (Configuration.getInstance().isEnabled()) {
+                if (sender.hasPermission(perm.joinEvent)) {
+                    if (sender instanceof Player) {
                         Player p = (Player) sender;
                         if(utility.isWizard(p)) {
                             if(args.length == 0) {
@@ -41,30 +41,26 @@ public class JoinCommand implements CommandExecutor, TabCompleter {
                                 return false;
                             }
 
-                            if(!database.exist(p.getUniqueId())) {
-                                StringBuilder builder = new StringBuilder();
-                                for(String a : args) {
-                                    builder.append(a).append(" ");
-                                }
-
-                                String contact = builder.toString().trim();
-                                House house = House.fromName(database.getHouse(p.getUniqueId()));
-                                UUID uuid = p.getUniqueId();
-
-                                if(house==null) {
-                                    sender.sendMessage(awv.getPrefix() + "Es ist ein Fehler aufgetreten. Bitte wende dich an ein Teammitglied.");
-                                    return true;
-                                }
-
-                                database.add(uuid, house, contact);
-                                sender.sendMessage(awv.getPrefix() + "Du hast dich erfolgreich beworben.");
-                                awv.getInstance().getLogger().info(uuid.toString() + " hat sich beim Event fuer das Haus " +house+ " beworben");
-                            } else {
-                                sender.sendMessage(awv.getPrefix() + "Du hast dich bereits beworben.");
+                        if (!database.exist(p.getUniqueId())) {
+                            StringBuilder builder = new StringBuilder();
+                            for (String a : args) {
+                                builder.append(a).append(" ");
                             }
 
+                            String contact = builder.toString().trim();
+                            House house = House.fromName(database.getHouse(p.getUniqueId()));
+                            UUID uuid = p.getUniqueId();
+
+                            if (house == null) {
+                                sender.sendMessage(awv.getPrefix() + "Es ist ein Fehler aufgetreten. Bitte wende dich an ein Teammitglied.");
+                                return true;
+                            }
+
+                            database.add(uuid, house, contact);
+                            sender.sendMessage(awv.getPrefix() + "Du hast dich erfolgreich beworben.");
+                            awv.getInstance().getLogger().info(uuid.toString() + " hat sich beim Event fuer das Haus " + house + " beworben");
                         } else {
-                            sender.sendMessage(awv.getPrefix() + "Du musst ein Zauberer sein, um an dem Event teilzunehmen.");
+                            sender.sendMessage(awv.getPrefix() + "Du hast dich bereits beworben.");
                         }
                     } else {
                         sendMessage.noPlayer(sender, awv.getPrefix());
@@ -75,26 +71,25 @@ public class JoinCommand implements CommandExecutor, TabCompleter {
             } else {
                 sender.sendMessage(awv.getPrefix() + "Es gibt zurzeit kein Event.");
             }
-            return true;
         }
-
-        return false;
+        return true;
     }
 
 
     //EXECUTE TAB-COMPLETE
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-        if (cmd.getName().equalsIgnoreCase(command.joinEvent)){
-             List<String> completions = new java.util.ArrayList<>();
+        if (cmd.getName().equalsIgnoreCase(command.joinEvent)) {
+            List<String> completions = new java.util.ArrayList<>();
             List<String> nextArgs = new ArrayList<>();
 
-            if (sender.hasPermission(perm.joinEvent)){
-                if(args.length ==1){
-                    nextArgs.add(sender.getName());}
-                StringUtil.copyPartialMatches(args[0], nextArgs, completions);
-
-            }return completions;
+            if (sender.hasPermission(perm.joinEvent)) {
+                if(args.length == 1) {
+                    nextArgs.add(sender.getName());
+                    StringUtil.copyPartialMatches(args[0], nextArgs, completions);
+                }
+            }
+            return completions;
         }
         return Collections.emptyList();
     }

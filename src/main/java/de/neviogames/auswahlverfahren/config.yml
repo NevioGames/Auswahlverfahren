@@ -6,7 +6,7 @@
 #    NEVER CHANGE SOMETHING IF YOU DON'T KNOW WHAT YOU'RE DOING!     #
 #                                                                    #
 # Plugin written by NevioGames.de                                    #
-# Authors: Nevio, BloodRaid                                          #
+# Authors: Nevio, Nocti                                              #
 # COPYRIGHT by NevioGames                                            #
 ######################################################################
 
@@ -28,13 +28,7 @@
 server:
   # Name of the Server
   # NEVER CHANGE THIS IF YOU DON'T KNOW WHAT YOU'RE DOING!
-  serverName: ''
-
-  # Screen names of other servers e.g. (fb,lbah)
-  # Separate multiple screens with a comma
-  # Don't use the screen from this server
-  # NEVER CHANGE THIS IF YOU DON'T KNOW WHAT YOU'RE DOING!
-  serverScreen: ''
+  serverName: 'lbah'
 
 ######################################################################
 #                                                                    #
@@ -43,5 +37,22 @@ server:
 ######################################################################
 
 settings:
+  # Is event enabled
   enable: false
+  # Is Daniel playing
   dagiPlay: false
+  # Name of the event
+  eventName: "1400"
+  # Deny former candidates
+  denyFormerCandidates: true
+  # Need a second team
+  secondTeam: true
+  # %houseColor = replace with the house color
+  # %house = replace with the house
+  selectionText1: "Folgende Spieler haben sich für die &c&lerste Aufgabe &0im Haus %houseColor%house &0qualifiziert:"
+  selectionText2: "Folgende Spieler haben sich für die &2&lzweite Aufgabe &0im Haus %houseColor%house &0qualifiziert:"
+  # Set the team size
+  teamSize1: 4
+  teamSize2: 4
+  # Can muggle join the event
+  onlyWizards: true

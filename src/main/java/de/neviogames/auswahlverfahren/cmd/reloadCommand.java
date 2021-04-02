@@ -18,7 +18,8 @@ import java.util.List;
 import org.bukkit.util.StringUtil;
 
 public class reloadCommand implements CommandExecutor, TabCompleter {
-  @Override
+
+    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         //SET COMMAND PROPERTIES
         cmd.setPermissionMessage(sendMessage.getNoPermMessage(awv.getPrefix()));
@@ -28,31 +29,32 @@ public class reloadCommand implements CommandExecutor, TabCompleter {
         //EXECUTE COMMAND
         if (cmd.getName().equalsIgnoreCase(command.awv)) {
 
-               if (sender.hasPermission(perm.reload)) {
-                    if (sender instanceof Player) {
-                        Player p = (Player) sender;
-                        if (utility.isAdmin(p) && utility.isWizard(p)) {
-                            if (args.length == 1) {
-                              if (args [0].equalsIgnoreCase(argument.reload)){
-                                    awv.getPlugin(awv.class).reloadConfig();
-                                    Configuration.getInstance().load();
-                                    sender.sendMessage(awv.getPrefix() + "Konfik wurde neu geladen");
-                                    return true;
-                                    }else {
-                                  sendMessage.wrongArgs(sender, awv.getPrefix());
-                              }
-                                }else {
-                                    sendMessage.wrongArgs(sender, awv.getPrefix()); }
-                            return false;
+            if (sender.hasPermission(perm.reload)) {
+                if (sender instanceof Player) {
+                    Player p = (Player) sender;
+                    if (utility.isAdmin(p) && utility.isWizard(p)) {
+                        if (args.length == 1) {
+                            if (args [0].equalsIgnoreCase(argument.reload)){
+                                awv.getPlugin(awv.class).reloadConfig();
+                                Configuration.getInstance().load();
+                                sender.sendMessage(awv.getPrefix() + "Konfik wurde neu geladen");
+                                return true;
+                            } else {
+                              sendMessage.wrongArgs(sender, awv.getPrefix());
+                            }
                         } else {
-                            sender.sendMessage(awv.getPrefix()+ "Du musst Admin sein um das Ausf"+utility.ue+"hren zu k"+utility.oe+"nnen");
+                            sendMessage.wrongArgs(sender, awv.getPrefix());
                         }
-                    } else{
-                        sendMessage.noPlayer(sender, awv.getPrefix());
+                        return false;
+                    } else {
+                        sender.sendMessage(awv.getPrefix()+ "Du musst Admin sein um das Ausf"+utility.ue+"hren zu k"+utility.oe+"nnen");
                     }
-                } else {
-                   sendMessage.noPerm(sender, awv.getPrefix());
-               }
+                } else{
+                    sendMessage.noPlayer(sender, awv.getPrefix());
+                }
+            } else {
+                sendMessage.noPerm(sender, awv.getPrefix());
+            }
             return true;
         }
         return false;
@@ -61,16 +63,17 @@ public class reloadCommand implements CommandExecutor, TabCompleter {
     //EXECUTE TAB-COMPLETE
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-      if (cmd.getName().equalsIgnoreCase(command.awv)){
-          List <String> complitation = new ArrayList<>();
-          List <String> nextArgs = new ArrayList<>();
-          if (sender.hasPermission(perm.reload)){
-              if (args.length==1){
-                  nextArgs.add(argument.reload);
-                  StringUtil.copyPartialMatches(args[0], nextArgs,complitation);
-            } return complitation;
+        if (cmd.getName().equalsIgnoreCase(command.awv)) {
+            List <String> completions = new ArrayList<>();
+            List <String> nextArgs = new ArrayList<>();
+            if (sender.hasPermission(perm.reload)) {
+                if (args.length==1) {
+                    nextArgs.add(argument.reload);
+                    StringUtil.copyPartialMatches(args[0], nextArgs,completions);
+                }
+                return completions;
+            }
         }
-    }
         return Collections.emptyList();
     }
 }

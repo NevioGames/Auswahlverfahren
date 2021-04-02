@@ -35,6 +35,7 @@ public class awv extends JavaPlugin {
             getLogger().info("Config geladen.");
         } else getLogger().warning("Config wurde nicht geladen!");
         database.createTable();
+        database.createTableFormerEventCandidates();
         try {
             registerCMD();
         } catch (Throwable t) {

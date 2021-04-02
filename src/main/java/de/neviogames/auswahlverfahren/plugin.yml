@@ -1,6 +1,6 @@
 name: Auswahlverfahren
 authors: [Nevio, Nocti]
-version: 0.0.1
+version: 1.0.0
 description: Auswahlverfahren fuer Events
 website: https://neviogames.de
 main: de.neviogames.auswahlverfahren.main.awv

@@ -1,17 +1,7 @@
 package de.neviogames.auswahlverfahren.utils;
 
-import net.minecraft.server.v1_7_R4.Items;
-import net.minecraft.server.v1_7_R4.PacketDataSerializer;
-import net.minecraft.server.v1_7_R4.PacketPlayOutCustomPayload;
-import net.minecraft.util.io.netty.buffer.ByteBuf;
-import net.minecraft.util.io.netty.buffer.Unpooled;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
