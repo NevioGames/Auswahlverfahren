@@ -1,17 +1,14 @@
 package de.neviogames.auswahlverfahren.cmd;
 
 import de.neviogames.auswahlverfahren.main.awv;
-import de.neviogames.auswahlverfahren.utils.BookAPI;
-import de.neviogames.auswahlverfahren.utils.House;
+import de.neviogames.auswahlverfahren.utils.*;
 import de.neviogames.auswahlverfahren.utils.edits.argument;
 import de.neviogames.auswahlverfahren.utils.edits.command;
 import de.neviogames.auswahlverfahren.utils.edits.perm;
-import de.neviogames.auswahlverfahren.utils.randomizer;
 import de.neviogames.nglib.utils.io.MathUtil;
 import de.neviogames.nglib.utils.io.sendMessage;
 import de.neviogames.nglib.utils.misc.FormatUtil;
 import de.neviogames.nglib.utils.utility;
-import de.neviogames.auswahlverfahren.utils.Configuration;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -79,6 +76,7 @@ public class auswahlCommand implements CommandExecutor, TabCompleter {
                                         awv.getInstance().getLogger().info(i+". "+ KandidatName);
                                         page1.append(ChatColor.BLACK).append(ChatColor.BOLD).append(i).append(". ").append(house.getColor()).append(KandidatName).append("\n");
                                         randomList.remove(kandidat);
+                                        database.setWhitelist(kandidat,1);
                                     }
                                     saveKandidaten(page1.toString(), 1);
 

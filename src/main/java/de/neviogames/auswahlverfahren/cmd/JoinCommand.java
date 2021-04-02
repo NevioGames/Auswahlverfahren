@@ -35,11 +35,24 @@ public class JoinCommand implements CommandExecutor, TabCompleter {
                 if (sender.hasPermission(perm.joinEvent)) {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
-                        if(utility.isWizard(p)) {
-                            if(args.length == 0) {
-                                sender.sendMessage(awv.getPrefix() + "Bitte gebe eine Kontaktm"+utility.oe+"glichkeit an.");
-                                return false;
+                        if (Configuration.getInstance().isOnlyWizards()) {
+                            if (!utility.isWizard(p)) {
+                                sender.sendMessage(awv.getPrefix() + "Du musst Zauberer sein um an dem Event teilnehmen zu k" + utility.oe + "nnen.");
+                                return true;
                             }
+                        }
+
+                        if (Configuration.getInstance().isDenyFormerCandidates()) {
+                            if (database.isFormerCandidate(p.getUniqueId())) {
+                                sender.sendMessage(awv.getPrefix() + "Du kannst dich leider für diese Event nicht bewerben, da du zuvor schon an einem Event(" + database.getFormerCandidateEvent(p.getUniqueId()) + ") teilgenommen hast.");
+                                return true;
+                            }
+                        }
+
+                        if (args.length == 0) {
+                            sender.sendMessage(awv.getPrefix() + "Bitte gebe eine Kontaktm" + utility.oe + "glichkeit an.");
+                            return false;
+                        }
 
                         if (!database.exist(p.getUniqueId())) {
                             StringBuilder builder = new StringBuilder();
