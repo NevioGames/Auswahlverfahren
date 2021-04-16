@@ -37,15 +37,19 @@ public class auswahlCommand implements CommandExecutor, TabCompleter {
         cmd.setUsage(sendMessage.createUsage(awv.getPrefix(), command.auswahl, new String[][]{{argument.Gryffindor, argument.Hufflepuff, argument.Ravenclaw, argument.Slytherin}, {"[RandomZahl]"}}));
 
         //EXECUTE COMMAND
+        // Check command, permission, is player, is admin
         if(cmd.getName().equalsIgnoreCase(command.auswahl)) {
             if(sender.hasPermission(perm.auswahl)) {
                 if(sender instanceof Player) {
                     Player p = (Player) sender;
-                    if(utility.isAdmin(p) && utility.isWizard(p)) {
+                    if(utility.isAdmin(p)) {
+
+                        // Check is Plugin in config enabled
                         if(!Configuration.getInstance().isEnabled()) {
                             sender.sendMessage(awv.getPrefix() + "Es gibt zurzeit kein Event.");
                         }
 
+                        // Check argument length
                         if(args.length < 2) {
                             sendMessage.lessArgs(sender, awv.getPrefix());
                             return false;
@@ -53,68 +57,87 @@ public class auswahlCommand implements CommandExecutor, TabCompleter {
 
                         if(args.length == 2) {
 
+                            // Get House and check is not null
                             House house = House.fromName(args[0]);
                             if(house==null) {
                                 sender.sendMessage(awv.getPrefix()+ ChatColor.RED + "Das Haus " +ChatColor.GOLD+ args[0] +ChatColor.RED+ " existiert nicht.");
                                 return false;
                             }
 
+                            // Check argument 1 is a number
                             if(utility.isNumber(args[1])){
                                 int eingabeZahl = Integer.parseInt(args[1]);
 
+                                // Get a randomized list from a house and check size
                                 ArrayList<UUID> randomList = randomizer.randomList(house, eingabeZahl);
-                                if(randomList.size() >= 8) {
-                                    String s1 = Configuration.getInstance().getSelectionText1().replace("%houseColor", house.getColor().toString()).replace("%house", house.name());
-                                    awv.getInstance().getLogger().info(FormatUtil.stripFormat(s1));
-                                    StringBuilder page1 = new StringBuilder(s1 + "\n\n");
-                                    for(int i = 1; i < Configuration.getInstance().getTeamSize1()+1; i++) {
-                                        UUID kandidat = randomList.get(MathUtil.fairRoundedRandom(0, randomList.size()));
-                                        String KandidatName = utility.getNameFromUUID(kandidat);
-                                        if(i==1 && house.name().equals(House.Hufflepuff.name())&& Configuration.getInstance().isDagiPlay()) {
-                                            KandidatName = "DaGiLP";
-                                        }
-                                        awv.getInstance().getLogger().info(i+". "+ KandidatName);
-                                        page1.append(ChatColor.BLACK).append(ChatColor.BOLD).append(i).append(". ").append(house.getColor()).append(KandidatName).append("\n");
-                                        randomList.remove(kandidat);
-                                        database.setWhitelist(kandidat,1);
-                                    }
-                                    saveKandidaten(page1.toString(), 1);
-
-                                    BookAPI book = new BookAPI();
-                                    book.setAuthor(ChatColor.AQUA+"Auswahlverfahren");
-                                    book.setDisplayName(""+house.getColor()+ChatColor.BOLD+house.name());
-                                    book.setTitle("Die Auserw"+utility.ae+"hlten von " +house.getColor()+ house.name());
-                                    book.setPages(page1.toString());
-
-                                    if(Configuration.getInstance().isSecondTeam()) {
-                                        String s2 = Configuration.getInstance().getSelectionText2().replace("%houseColor", house.getColor().toString()).replace("%house", house.name());
-                                        awv.getInstance().getLogger().info(FormatUtil.stripFormat(s2));
-                                        StringBuilder page2 = new StringBuilder(s2 + "\n\n");
-                                        for (int i = 1; i < Configuration.getInstance().getTeamSize2()+1; i++) {
-                                            UUID kandidat = randomList.get(MathUtil.fairRoundedRandom(0, randomList.size()));
-                                            String KandidatName = utility.getNameFromUUID(kandidat);
-                                            awv.getInstance().getLogger().info(i + ". " + KandidatName);
-                                            page2.append(ChatColor.BLACK).append(ChatColor.BOLD).append(i).append(". ").append(house.getColor()).append(KandidatName).append("\n");
-                                            randomList.remove(kandidat);
-                                            database.setWhitelist(kandidat, 2);
-                                        }
-                                        book.addPage(page2.toString());
-                                        saveKandidaten(page2.toString(), 2);
-                                    }
-
-
-                                    for (int i = 0; i < 9; i++) {
-                                        if(p.getInventory().getItem(i) == null) {
-                                            p.getInventory().setItem(i, book.create());
-                                            return true;
-                                        }
-                                    }
-
-                                    sender.sendMessage(awv.getPrefix() + ChatColor.RED + ChatColor.BOLD + "Leere deine Inventarleiste aus! Befehl konnte nicht ausgef"+utility.ue+"hrt werden.");
-
-                                } else {
+                                if(randomList.size() < 8) {
                                     sender.sendMessage(awv.getPrefix() + ChatColor.RED+ "Es haben sich nicht genug Spieler im Haus " +house.getColor()+ house.name() +ChatColor.RED+ " angemeldet.");
+                                    return true;
                                 }
+
+                                // Get a random candidate from the randomized list an build a String
+                                String text1 = Configuration.getInstance().getSelectionText1().replace("%houseColor", house.getColor().toString()).replace("%house", house.name());
+                                StringBuilder page1 = new StringBuilder(text1 + "\n\n");
+
+                                boolean isDagilp;
+                                for(int i = 1; i < Configuration.getInstance().getTeamSize1()+1; i++) {
+                                    UUID candidateUUID = randomList.get(MathUtil.fairRoundedRandom(0, randomList.size()));
+                                    String candidateName = utility.getNameFromUUID(candidateUUID);
+
+                                    isDagilp = false;
+                                    if(i==1 && house.name().equals(House.Hufflepuff.name()) && Configuration.getInstance().isDagiPlay()) {
+                                        candidateName = "DaGiLP";
+                                        isDagilp = true;
+                                    }
+
+                                    page1.append(ChatColor.BLACK).append(ChatColor.BOLD).append(i).append(". ").append(house.getColor()).append(candidateName).append("\n");
+                                    if(isDagilp) continue;
+
+                                    // remove candidate from the randomized list and whitelist the player for the event
+                                    randomList.remove(candidateUUID);
+                                    database.setWhitelist(candidateUUID,1);
+                                }
+
+                                // save and print the String with the candidates
+                                saveCandidates(page1.toString(), 1);
+                                awv.getInstance().getLogger().info(FormatUtil.stripFormat(page1.toString()));
+
+                                // create an output Book
+                                BookAPI book = new BookAPI();
+                                book.setAuthor(ChatColor.AQUA+"Auswahlverfahren");
+                                book.setDisplayName(""+house.getColor()+ChatColor.BOLD+house.name());
+                                book.setTitle("Die Auserw"+utility.ae+"hlten von " +house.getColor()+ house.name());
+                                book.setPages(page1.toString());
+
+                                // If seconds team = true, Get a random candidate from the randomized list an build a String
+                                if(Configuration.getInstance().isSecondTeam()) {
+                                    String text2 = Configuration.getInstance().getSelectionText2().replace("%houseColor", house.getColor().toString()).replace("%house", house.name());
+                                    StringBuilder page2 = new StringBuilder(text2 + "\n\n");
+
+                                    for (int i = 1; i < Configuration.getInstance().getTeamSize2()+1; i++) {
+                                        UUID candidateUUID = randomList.get(MathUtil.fairRoundedRandom(0, randomList.size()));
+                                        String candidateName = utility.getNameFromUUID(candidateUUID);
+                                        page2.append(ChatColor.BLACK).append(ChatColor.BOLD).append(i).append(". ").append(house.getColor()).append(candidateName).append("\n");
+
+                                        //remove candidate from the randomized list and whitelist the player for the event
+                                        randomList.remove(candidateUUID);
+                                        database.setWhitelist(candidateUUID, 2);
+                                    }
+
+                                    // save and print the String with the candidates, add a new page to the book
+                                    book.addPage(page2.toString());
+                                    saveCandidates(page2.toString(), 2);
+                                    awv.getInstance().getLogger().info(FormatUtil.stripFormat(page2.toString()));
+                                }
+
+                                // give the book to the player
+                                for (int i = 0; i < 9; i++) {
+                                    if(p.getInventory().getItem(i) == null) {
+                                        p.getInventory().setItem(i, book.create());
+                                        return true;
+                                    }
+                                }
+                                sender.sendMessage(awv.getPrefix() + ChatColor.RED + ChatColor.BOLD + "Leere deine Inventarleiste aus! Befehl konnte nicht ausgef"+utility.ue+"hrt werden.");
 
                             }
                             return true;
@@ -135,13 +158,14 @@ public class auswahlCommand implements CommandExecutor, TabCompleter {
         return false;
     }
 
-    private static void saveKandidaten(String kandidaten, int team) {
-        String s = new SimpleDateFormat("hh:mm:ss").format(System.currentTimeMillis()) + " - Team: "+team+" \n" + kandidaten + "\n\n";
+    // save candidates in a file
+    private static void saveCandidates(String candidateString, int team) {
+        String saveText = new SimpleDateFormat("hh:mm:ss").format(System.currentTimeMillis()) + " - Team: "+team+" \n" + candidateString + "\n\n";
         try {
-            String save = FormatUtil.stripFormat(s);
+            String save = FormatUtil.stripFormat(saveText);
             save += "\n\n";
 
-            FileWriter outStream = new FileWriter("plugins/Auswahlverfahren/auswahl.txt", true);
+            FileWriter outStream = new FileWriter("plugins/Auswahlverfahren/candidates.txt", true);
             BufferedWriter out = new BufferedWriter(outStream);
             out.append(save.replaceAll("\n", System.getProperty("line.separator")));
             out.close();

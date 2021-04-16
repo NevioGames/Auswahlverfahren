@@ -22,7 +22,7 @@ public final class Configuration {
     private int teamSize2;
     private boolean onlyWizards;
 
-
+    // load values from config
     public boolean load() {
         try {
             FileConfiguration configuration = awv.getPlugin(awv.class).getConfig();
@@ -38,7 +38,6 @@ public final class Configuration {
             teamSize1 = configuration.getInt(ConfigEnum.teamSize1.getPath());
             teamSize2 = configuration.getInt(ConfigEnum.teamSize2.getPath());
             onlyWizards = configuration.getBoolean(ConfigEnum.onlyWizards.getPath());
-
 
             return true;
         } catch (Throwable t) {

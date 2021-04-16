@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@SuppressWarnings({"deprecation", "unused"})
 public class database {
 
     public static void createTable() {
@@ -30,7 +31,7 @@ public class database {
         return DataSource.existsValue("Auswahlevent", uuid);
     }
 
-    public static String getHouse (UUID uuid) {
+    public static String getPlayerHouse(UUID uuid) {
         return DataSource.getStringResult("player",  "RANK", uuid);
     }
 

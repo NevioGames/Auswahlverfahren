@@ -7,7 +7,6 @@ import de.neviogames.auswahlverfahren.cmd.reloadCommand;
 import de.neviogames.auswahlverfahren.utils.Configuration;
 import de.neviogames.auswahlverfahren.utils.database;
 import de.neviogames.auswahlverfahren.utils.edits.command;
-import de.neviogames.nglib.utils.io.ErrorHandle;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,19 +27,21 @@ public class awv extends JavaPlugin {
     @Override
     public void onEnable() {
         getLogger().info("-------------------------------");
-        saveDefaultConfig();
         getLogger().info("Lade "+name+"");
         instance = this;
+
+        //Load Config
+        saveDefaultConfig();
         if(Configuration.getInstance().load()) {
             getLogger().info("Config geladen.");
         } else getLogger().warning("Config wurde nicht geladen!");
+
+        //Load MySQL
         database.createTable();
         database.createTableFormerEventCandidates();
-        try {
-            registerCMD();
-        } catch (Throwable t) {
-            ErrorHandle.error(ErrorHandle.cs, t, prefix);
-        }
+
+        //Load Commands
+        registerCMD();
         getLogger().info("Plugin " + name + " Version " + version + " erfolgreich geladen");
         getLogger().info("by " + authors.toString().replace("[","").replace("]",""));
         getLogger().info("Plugin Aktiviert");

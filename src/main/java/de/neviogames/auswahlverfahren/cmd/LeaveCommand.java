@@ -26,19 +26,24 @@ public class LeaveCommand implements CommandExecutor, TabCompleter {
         cmd.setUsage(sendMessage.createUsage(awv.getPrefix(), command.leaveEvent, new String[][]{{}}));
 
         //EXECUTE COMMAND
+        // Check command, permission, is player, is Plugin in config enabled
         if(cmd.getName().equalsIgnoreCase(command.leaveEvent)) {
             if(Configuration.getInstance().isEnabled()) {
                 if(sender.hasPermission(perm.leaveEvent)) {
                     if(sender instanceof Player) {
                         Player p = (Player) sender;
+
+                        // Check argument length
                         if(args.length != 0) {
                             sendMessage.manyArgs(sender, awv.getPrefix());
                             return false;
                         }
 
+                        // Has the player already applied
                         if(database.exist(p.getUniqueId())) {
                             UUID uuid = p.getUniqueId();
 
+                            // remove player from database
                             database.remove(uuid);
                             sender.sendMessage(awv.getPrefix() + "Du hast dich erfolgreich aus dem Event ausgetragen.");
                             awv.getInstance().getLogger().info(uuid.toString() + " hat sich aus dem Event ausgetragen.");

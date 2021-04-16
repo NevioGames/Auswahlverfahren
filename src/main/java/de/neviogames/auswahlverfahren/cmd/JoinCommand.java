@@ -30,11 +30,14 @@ public class JoinCommand implements CommandExecutor, TabCompleter {
         cmd.setUsage(sendMessage.createUsage(awv.getPrefix(), command.joinEvent, new String[][]{{argument.Contact}}));
 
         //EXECUTE COMMAND
+        // Check command, permission, is player, is Plugin in config enabled
         if(cmd.getName().equalsIgnoreCase(command.joinEvent)) {
             if (Configuration.getInstance().isEnabled()) {
                 if (sender.hasPermission(perm.joinEvent)) {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
+
+                        // Check for wizards
                         if (Configuration.getInstance().isOnlyWizards()) {
                             if (!utility.isWizard(p)) {
                                 sender.sendMessage(awv.getPrefix() + "Du musst Zauberer sein um an dem Event teilnehmen zu k" + utility.oe + "nnen.");
@@ -42,39 +45,47 @@ public class JoinCommand implements CommandExecutor, TabCompleter {
                             }
                         }
 
+                        // Check for previous participation
                         if (Configuration.getInstance().isDenyFormerCandidates()) {
                             if (database.isFormerCandidate(p.getUniqueId())) {
-                                sender.sendMessage(awv.getPrefix() + "Du kannst dich leider für diese Event nicht bewerben, da du zuvor schon an einem Event(" + database.getFormerCandidateEvent(p.getUniqueId()) + ") teilgenommen hast.");
+                                sender.sendMessage(awv.getPrefix() + "Du kannst dich leider für dieses Event nicht bewerben, da du zuvor schon an einem Event(" + database.getFormerCandidateEvent(p.getUniqueId()) + ") teilgenommen hast.");
                                 return true;
                             }
                         }
 
+                        // Check argument length
                         if (args.length == 0) {
                             sender.sendMessage(awv.getPrefix() + "Bitte gebe eine Kontaktm" + utility.oe + "glichkeit an.");
                             return false;
                         }
 
-                        if (!database.exist(p.getUniqueId())) {
-                            StringBuilder builder = new StringBuilder();
-                            for (String a : args) {
-                                builder.append(a).append(" ");
-                            }
-
-                            String contact = builder.toString().trim();
-                            House house = House.fromName(database.getHouse(p.getUniqueId()));
-                            UUID uuid = p.getUniqueId();
-
-                            if (house == null) {
-                                sender.sendMessage(awv.getPrefix() + "Es ist ein Fehler aufgetreten. Bitte wende dich an ein Teammitglied.");
-                                return true;
-                            }
-
-                            database.add(uuid, house, contact);
-                            sender.sendMessage(awv.getPrefix() + "Du hast dich erfolgreich beworben.");
-                            awv.getInstance().getLogger().info(uuid.toString() + " hat sich beim Event fuer das Haus " + house + " beworben");
-                        } else {
+                        // Has the player already applied
+                        if (database.exist(p.getUniqueId())) {
                             sender.sendMessage(awv.getPrefix() + "Du hast dich bereits beworben.");
+                            return true;
                         }
+
+                        // put all arguments to a string
+                        StringBuilder builder = new StringBuilder();
+                        for (String a : args) {
+                            builder.append(a).append(" ");
+                        }
+
+                        String contact = builder.toString().trim();
+                        House house = House.fromName(database.getPlayerHouse(p.getUniqueId()));
+                        UUID uuid = p.getUniqueId();
+
+                        // check house is not null
+                        if (house == null) {
+                            sender.sendMessage(awv.getPrefix() + "Es ist ein Fehler aufgetreten. Bitte wende dich an ein Teammitglied.");
+                            return true;
+                        }
+
+                        // put player into database, send success messages
+                        database.add(uuid, house, contact);
+                        sender.sendMessage(awv.getPrefix() + "Du hast dich erfolgreich beworben.");
+                        awv.getInstance().getLogger().info(uuid.toString() + " hat sich beim Event fuer das Haus " + house + " beworben");
+
                     } else {
                         sendMessage.noPlayer(sender, awv.getPrefix());
                     }

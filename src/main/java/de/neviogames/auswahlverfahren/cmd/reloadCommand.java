@@ -6,16 +6,15 @@ import de.neviogames.auswahlverfahren.utils.edits.argument;
 import de.neviogames.auswahlverfahren.utils.edits.command;
 import de.neviogames.auswahlverfahren.utils.edits.perm;
 import de.neviogames.nglib.utils.io.sendMessage;
-import de.neviogames.nglib.utils.utility;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.util.StringUtil;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.bukkit.util.StringUtil;
 
 public class reloadCommand implements CommandExecutor, TabCompleter {
 
@@ -23,35 +22,29 @@ public class reloadCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         //SET COMMAND PROPERTIES
         cmd.setPermissionMessage(sendMessage.getNoPermMessage(awv.getPrefix()));
-        cmd.setDescription("Ladet die Konfik neu");
+        cmd.setDescription("Ladet die Config neu");
         cmd.setUsage(sendMessage.createUsage(awv.getPrefix(), command.awv, new String[][]{{argument.reload}}));
 
         //EXECUTE COMMAND
+        // Check command, permission and argument length
         if (cmd.getName().equalsIgnoreCase(command.awv)) {
-
             if (sender.hasPermission(perm.reload)) {
-                if (sender instanceof Player) {
-                    Player p = (Player) sender;
-                    if (utility.isAdmin(p) && utility.isWizard(p)) {
-                        if (args.length == 1) {
-                            if (args [0].equalsIgnoreCase(argument.reload)){
-                                awv.getPlugin(awv.class).reloadConfig();
-                                Configuration.getInstance().load();
-                                sender.sendMessage(awv.getPrefix() + "Konfik wurde neu geladen");
-                                return true;
-                            } else {
-                              sendMessage.wrongArgs(sender, awv.getPrefix());
-                            }
-                        } else {
-                            sendMessage.wrongArgs(sender, awv.getPrefix());
-                        }
-                        return false;
+                if (args.length == 1) {
+
+                    // Check the argument and reload config
+                    if (args [0].equalsIgnoreCase(argument.reload)) {
+                        awv.getPlugin(awv.class).reloadConfig();
+                        Configuration.getInstance().load();
+                        sender.sendMessage(awv.getPrefix() + "Config wurde neu geladen");
+                        return true;
+
                     } else {
-                        sender.sendMessage(awv.getPrefix()+ "Du musst Admin sein um das Ausf"+utility.ue+"hren zu k"+utility.oe+"nnen");
+                      sendMessage.wrongArgs(sender, awv.getPrefix());
                     }
-                } else{
-                    sendMessage.noPlayer(sender, awv.getPrefix());
+                } else {
+                    sendMessage.wrongArgs(sender, awv.getPrefix());
                 }
+                return false;
             } else {
                 sendMessage.noPerm(sender, awv.getPrefix());
             }
