@@ -97,7 +97,7 @@ public class auswahlCommand implements CommandExecutor, TabCompleter {
 
             // Get a randomized list from a house and check size
             ArrayList<UUID> randomList = randomizer.randomList(house, eingabeZahl);
-            if (randomList.size() < 8) {
+            if (randomList.size() < Configuration.getInstance().getTeamSize1() + (Configuration.getInstance().isSecondTeam() ? Configuration.getInstance().getTeamSize2() : 0)) {
                 sender.sendMessage(awv.getPrefix() + ChatColor.RED+ "Es haben sich nicht genug Spieler im Haus " +house.getColor()+ house.name() +ChatColor.RED+ " beworben.");
                 return true;
             }
@@ -112,7 +112,7 @@ public class auswahlCommand implements CommandExecutor, TabCompleter {
                 String candidateName = utility.getNameFromUUID(candidateUUID);
 
                 isDagilp = false;
-                if (i==1 && house.name().equals(House.HUFFLEPUFF.name()) && Configuration.getInstance().isDagiPlay()) {
+                if (i == 1 && house.name().equals(House.HUFFLEPUFF.name()) && Configuration.getInstance().isDagiPlay()) {
                     candidateName = "DaGiLP";
                     isDagilp = true;
                 }
