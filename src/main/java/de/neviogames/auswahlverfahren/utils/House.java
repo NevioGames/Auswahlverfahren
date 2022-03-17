@@ -1,29 +1,23 @@
 package de.neviogames.auswahlverfahren.utils;
 
+import lombok.Getter;
 import org.bukkit.ChatColor;
 
+@Getter
 public enum House {
 
-    Muggle ("MUGGLE", ChatColor.GRAY),
-    Gryffindor ("GRYFFINDOR", ChatColor.RED),
-    Ravenclaw ("RAVENCLAW", ChatColor.BLUE),
-    Hufflepuff ("HUFFLEPUFF", ChatColor.YELLOW),
-    Slytherin ("SLYTHERIN", ChatColor.GREEN);
+    MUGGLE("Muggle", ChatColor.GRAY),
+    GRYFFINDOR("Gryffindor", ChatColor.RED),
+    RAVENCLAW("Ravenclaw", ChatColor.BLUE),
+    HUFFLEPUFF("Hufflepuff", ChatColor.YELLOW),
+    SLYTHERIN("Slytherin", ChatColor.GREEN);
 
-    private final String DB_Name;
+    private final String displayName;
     private final ChatColor color;
 
-    House(String DB_Name, ChatColor color) {
-        this.DB_Name = DB_Name;
+    House(String displayName, ChatColor color) {
+        this.displayName = displayName;
         this.color = color;
-    }
-
-    public String getDB_Name() {
-        return DB_Name;
-    }
-
-    public ChatColor getColor() {
-        return color;
     }
 
     public static House fromName(final String Name) {

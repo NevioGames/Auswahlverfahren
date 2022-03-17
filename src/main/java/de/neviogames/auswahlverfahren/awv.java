@@ -1,12 +1,13 @@
-package de.neviogames.auswahlverfahren.main;
+package de.neviogames.auswahlverfahren;
 
-import de.neviogames.auswahlverfahren.cmd.JoinCommand;
-import de.neviogames.auswahlverfahren.cmd.LeaveCommand;
-import de.neviogames.auswahlverfahren.cmd.auswahlCommand;
-import de.neviogames.auswahlverfahren.cmd.reloadCommand;
+import de.neviogames.auswahlverfahren.commands.JoinCommand;
+import de.neviogames.auswahlverfahren.commands.LeaveCommand;
+import de.neviogames.auswahlverfahren.commands.auswahlCommand;
+import de.neviogames.auswahlverfahren.commands.reloadCommand;
 import de.neviogames.auswahlverfahren.utils.Configuration;
 import de.neviogames.auswahlverfahren.utils.database;
 import de.neviogames.auswahlverfahren.utils.edits.command;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,9 +16,10 @@ import java.util.List;
 
 public class awv extends JavaPlugin {
 
-
+    @Getter
     private static final String prefix = ChatColor.DARK_AQUA + "[" + ChatColor.DARK_RED + "N" + ChatColor.GOLD + "G" + ChatColor.DARK_AQUA + "] " + ChatColor.GRAY;
 
+    @Getter
     private static awv instance;
 
     private final String name = this.getDescription().getName();
@@ -42,6 +44,7 @@ public class awv extends JavaPlugin {
 
         //Load Commands
         registerCMD();
+
         getLogger().info("Plugin " + name + " Version " + version + " erfolgreich geladen");
         getLogger().info("by " + authors.toString().replace("[","").replace("]",""));
         getLogger().info("Plugin Aktiviert");
@@ -61,22 +64,9 @@ public class awv extends JavaPlugin {
     }
 
     private void registerCMD() {
-        getCommand(command.auswahl).setExecutor(new auswahlCommand());
-        getCommand(command.auswahl).setTabCompleter(new auswahlCommand());
-        getCommand(command.awv).setExecutor(new reloadCommand());
-        getCommand(command.awv).setTabCompleter(new reloadCommand());
-        getCommand(command.joinEvent).setExecutor(new JoinCommand());
-        getCommand(command.joinEvent).setTabCompleter(new JoinCommand());
-        getCommand(command.leaveEvent).setExecutor(new LeaveCommand());
-        getCommand(command.leaveEvent).setTabCompleter(new LeaveCommand());
-
-    }
-
-    public static String getPrefix() {
-        return prefix;
-    }
-
-    public static awv getInstance() {
-        return instance;
+        new auswahlCommand();
+        new reloadCommand();
+        new JoinCommand();
+        new LeaveCommand();
     }
 }
