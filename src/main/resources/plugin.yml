@@ -1,0 +1,21 @@
+name: Auswahlverfahren
+authors: [Nevio]
+version: 1.1.0-SNAPSHOT
+description: Auswahlverfahren fuer Events
+website: https://neviogames.de
+main: de.neviogames.auswahlverfahren.awv
+depend: [NGLib]
+prefix: AWV
+commands:
+  auswahl:
+    description: Gebe dir alle Teilnehmer eines Teams aus
+    perm: awv.help.show.auswahl
+  awv:
+    description: Main command for reload
+    perm: awv.help.show.awv
+  joinEvent:
+    description: Trete dem Event bei
+    perm: awv.help.show.join
+  leaveEvent:
+    description: Verlasse das Event wieder
+    perm: awv.help.show.leave

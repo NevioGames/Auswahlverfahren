@@ -1,13 +1,14 @@
 ######################################################################
 #                                                                    #
-#                             NGA CONFIG                             #
+#                       Auswahlverfahren CONFIG                      #
 #                                                                    #
 #                              !WARNING!                             #
 #    NEVER CHANGE SOMETHING IF YOU DON'T KNOW WHAT YOU'RE DOING!     #
 #                                                                    #
 # Plugin written by NevioGames.de                                    #
-# Authors: Nevio, Nocti                                              #
+# Authors: Nevio                                                     #
 # COPYRIGHT by NevioGames                                            #
+# Using this plugin is only allowed with a license from NevioGames!  #
 ######################################################################
 
 # If you want to use special characters in this document, such as accented letters, you MUST save the file as UTF-8, not ANSI.
@@ -16,19 +17,6 @@
 #   - Indents are correct: YAML hierarchy is based entirely on indentation
 #   - You have "escaped" all apostrophes in your text: If you want to write "don't", for example, write "don''t" instead (note the doubled apostrophe)
 #   - Text with symbols is enclosed in single or double quotation marks
-
-######################################################################
-#                                                                    #
-#                           SERVER SETTINGS                          #
-#                                                                    #
-#                              !WARNING!                             #
-#    NEVER CHANGE SOMETHING IF YOU DON'T KNOW WHAT YOU'RE DOING!     #
-######################################################################
-
-server:
-  # Name of the Server
-  # NEVER CHANGE THIS IF YOU DON'T KNOW WHAT YOU'RE DOING!
-  serverName: 'lbah'
 
 ######################################################################
 #                                                                    #
@@ -42,7 +30,7 @@ settings:
   # Is Daniel playing
   dagiPlay: false
   # Name of the event
-  eventName: "1400"
+  eventName: '1400'
   # Deny former candidates
   denyFormerCandidates: true
   # Need a second team

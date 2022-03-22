@@ -12,8 +12,8 @@ import java.util.Map;
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class BookAPI {
 
-    ItemStack itemStack;
-    BookMeta meta;
+    final ItemStack itemStack;
+    final BookMeta meta;
 
     public BookAPI() {
         this.itemStack = new ItemStack(Material.WRITTEN_BOOK);
