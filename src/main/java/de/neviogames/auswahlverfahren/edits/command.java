@@ -1,4 +1,4 @@
-package de.neviogames.auswahlverfahren.utils.edits;
+package de.neviogames.auswahlverfahren.edits;
 
 public class command {
 
