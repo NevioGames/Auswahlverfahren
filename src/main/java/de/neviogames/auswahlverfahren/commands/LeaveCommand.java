@@ -32,48 +32,45 @@ public class LeaveCommand implements CommandExecutor, TabCompleter {
 
         //EXECUTE COMMAND
         // Check command
-        if(cmd.getName().equalsIgnoreCase(command.leaveEvent)) {
+        if (!cmd.getName().equalsIgnoreCase(command.leaveEvent)) return false;
 
-            // Check is Plugin in config enabled
-            if (!Configuration.getInstance().isEnabled()) {
-                sender.sendMessage(awv.getPrefix() + "Es gibt zurzeit kein Event.");
-            }
+        // Check is Plugin in config enabled
+        if (!Configuration.getInstance().isApplicationPhase()) {
+            sender.sendMessage(awv.getPrefix() + "Es gibt zurzeit keine Bewerbungsphase.");
+        }
 
-            // Check sender has permission
-            if (!sender.hasPermission(perm.leaveEvent)) {
-                sendMessage.noPerm(sender, awv.getPrefix());
-                return true;
-            }
-
-            // Check sender is Player
-            if (!(sender instanceof Player)) {
-                sendMessage.noPlayer(sender, awv.getPrefix());
-                return true;
-            }
-
-            // Check argument length
-            if (args.length != 0) {
-                sendMessage.manyArgs(sender, awv.getPrefix());
-                return false;
-            }
-
-            Player player = (Player) sender;
-            UUID uuid = player.getUniqueId();
-
-            // Has the player already applied
-            if(!database.exist(uuid)) {
-                sender.sendMessage(awv.getPrefix() + "Du nimmst nicht am Event teil.");
-                return true;
-            }
-
-            // remove player from database
-            database.remove(uuid);
-            sender.sendMessage(awv.getPrefix() + "Du hast dich erfolgreich aus dem Event ausgetragen.");
-            awv.getInstance().getLogger().info(uuid.toString() + " hat sich aus dem Event ausgetragen.");
+        // Check sender has permission
+        if (!sender.hasPermission(perm.leaveEvent)) {
+            sendMessage.noPerm(sender, awv.getPrefix());
             return true;
         }
 
-        return false;
+        // Check sender is Player
+        if (!(sender instanceof Player)) {
+            sendMessage.noPlayer(sender, awv.getPrefix());
+            return true;
+        }
+
+        // Check argument length
+        if (args.length != 0) {
+            sendMessage.manyArgs(sender, awv.getPrefix());
+            return false;
+        }
+
+        Player player = (Player) sender;
+        UUID uuid = player.getUniqueId();
+
+        // Has the player already applied
+        if(!database.exist(uuid)) {
+            sender.sendMessage(awv.getPrefix() + "Du nimmst nicht am Event teil.");
+            return true;
+        }
+
+        // remove player from database
+        database.remove(uuid);
+        sender.sendMessage(awv.getPrefix() + "Du hast dich erfolgreich aus dem Event ausgetragen.");
+        awv.getInstance().getLogger().info(uuid + " hat sich aus dem Event ausgetragen.");
+        return true;
     }
 
 
