@@ -25,22 +25,54 @@
 ######################################################################
 
 settings:
-  # Is event enabled
-  enable: false
-  # Is Daniel playing
-  dagiPlay: false
+  applicationPhase: false
   # Name of the event
-  eventName: '1400'
+  eventName: ''
   # Deny former candidates
   denyFormerCandidates: true
-  # Need a second team
-  secondTeam: true
-  # %houseColor = replace with the house color
-  # %house = replace with the house
-  selectionText1: "Folgende Spieler haben sich für die &c&lerste Aufgabe &0im Haus %houseColor%house &0qualifiziert:"
-  selectionText2: "Folgende Spieler haben sich für die &2&lzweite Aufgabe &0im Haus %houseColor%house &0qualifiziert:"
-  # Set the team size
-  teamSize1: 4
-  teamSize2: 4
-  # Can muggle join the event
-  onlyWizards: true
+
+  # Possible Values: "perm", "select", "auto", "rank"
+  # Rank use the rank on dagilp.net
+  # Perm use the perm "nge.team.{team}" {team} replaced by the team
+  teamSelectMode: "rank"
+  teams:
+    gryffindor:
+      enabled: true
+      display: "Gryffindor"
+      color: "&c"
+    ravenclaw:
+      enabled: true
+      display: "Ravenclaw"
+      color: "&9"
+    hufflepuff:
+      enabled: true
+      display: "Hufflepuff"
+      color: "&e"
+    slytherin:
+      enabled: true
+      display: "Slytherin"
+      color: "&a"
+
+  groups:
+    1:
+      # Always true
+      enabled: true
+      groupSize: 4
+      # %color = replace with the team color
+      # %display = replace with the team display name
+      selectionText: "Folgende Spieler haben sich für im Haus %color%display &0qualifiziert:"
+      # selectionText: "Folgende Spieler haben sich für die &c&lerste Aufgabe &0im Haus %color%display &0qualifiziert:"
+    2:
+      enabled: false
+      groupSize: 4
+      # %houseColor = replace with the house color
+      # %house = replace with the house
+      selectionText: "Folgende Spieler haben sich für die &9&lzweite Aufgabe &0im Haus %color%display &0qualifiziert:"
+
+  fixedPlayers:
+    # Is Daniel playing
+    9d83e353-e60c-4eb8-a036-e9ae0436f343:
+      enabled: false
+      team: "hufflepuff"
+      group: 1
+
