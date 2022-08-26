@@ -1,8 +1,10 @@
 package de.neviogames.auswahlverfahren.utils;
 
-
+import de.neviogames.auswahlverfahren.awv;
 import de.neviogames.nglib.utils.ds.DataSource;
+import de.neviogames.nglib.utils.io.ErrorHandle;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -14,10 +16,10 @@ public class database {
         DataSource.createTable("CREATE TABLE IF NOT EXISTS Auswahlevent (UUID VARCHAR(50), house VARCHAR(25), contact VARCHAR(120), time BIGINT, whitelist INT)");
     }
 
-    public static void add(UUID uuid, House house, String contact) {
-        DataSource.update("INSERT INTO Auswahlevent(UUID, house, contact, time, whitelist) VALUES ('"+uuid.toString()+"', '"+house.name()+"', '"+contact+"', '"+System.currentTimeMillis()+"', '0')");
-
+    public static void add(NGEventCandidate candidate) {
+        DataSource.update("INSERT INTO Auswahlevent(UUID, house, contact, time, whitelist) VALUES ('"+candidate.getUniqueId().toString()+"', '"+candidate.getTeam().getName()+"', '"+candidate.getContact()+"', '"+candidate.getTimestamp()+"', '"+candidate.getWhitelistId()+"')");
     }
+
     public static void remove(UUID uuid) {
         DataSource.delete("Auswahlevent", uuid);
     }
@@ -26,7 +28,7 @@ public class database {
         return DataSource.existsValue("Auswahlevent", uuid);
     }
 
-    public static String getPlayerHouse(UUID uuid) {
+    public static String getPlayerTeam(UUID uuid) {
         return DataSource.getStringResult("player",  "RANK", uuid);
     }
 
@@ -35,13 +37,17 @@ public class database {
     }
 
 
-    public static ArrayList<UUID> getAllMembers(House house) {
-        List<String> list = DataSource.getStringList("UUID", "Auswahlevent", "house", house.name());
-        ArrayList<UUID> outList = new ArrayList<>();
-        for(String s : list) {
-            outList.add(UUID.fromString(s));
+    public static ArrayList<UUID> getAllMembers(NGEventTeam team) { //TODO TESTEN ANSONSTEN METHODE 2 BENUTZEN
+        ArrayList<UUID> list = new ArrayList<>();
+        try {
+            ResultSet rs = DataSource.getResult("SELECT UUID FROM Auswahlevent WHERE house='"+team.getName()+"' AND whitelist='0'");
+            while (rs.next()) {
+                list.add(UUID.fromString(rs.getString("UUID")));
+            }
+        } catch (Throwable e) {
+            ErrorHandle.error(ErrorHandle.cs, e, awv.getPrefix());
         }
-        return outList;
+        return list;
     }
 
 
@@ -57,8 +63,8 @@ public class database {
         return DataSource.getStringResult("FormerEventCandidates",  "event", uuid);
     }
 
-    public static ArrayList<UUID> getAllFormerCandidates(House house) {
-        List<String> list = DataSource.getStringList("UUID", "FormerEventCandidates", "house", house.name());
+    public static ArrayList<UUID> getAllFormerCandidates(NGEventTeam team) {
+        List<String> list = DataSource.getStringList("UUID", "FormerEventCandidates", "house", team.getName());
         ArrayList<UUID> outList = new ArrayList<>();
         for(String s : list) {
             outList.add(UUID.fromString(s));

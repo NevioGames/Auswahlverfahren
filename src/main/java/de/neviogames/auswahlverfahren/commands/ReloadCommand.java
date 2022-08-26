@@ -2,9 +2,9 @@ package de.neviogames.auswahlverfahren.commands;
 
 import de.neviogames.auswahlverfahren.awv;
 import de.neviogames.auswahlverfahren.utils.Configuration;
-import de.neviogames.auswahlverfahren.utils.edits.argument;
-import de.neviogames.auswahlverfahren.utils.edits.command;
-import de.neviogames.auswahlverfahren.utils.edits.perm;
+import de.neviogames.auswahlverfahren.edits.argument;
+import de.neviogames.auswahlverfahren.edits.command;
+import de.neviogames.auswahlverfahren.edits.perm;
 import de.neviogames.nglib.utils.io.sendMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,12 +25,12 @@ public class ReloadCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        //SET COMMAND PROPERTIES
+        // SET COMMAND PROPERTIES
         cmd.setPermissionMessage(sendMessage.getNoPermMessage(awv.getPrefix()));
         cmd.setDescription("Ladet die Config neu");
         cmd.setUsage(sendMessage.createUsage(awv.getPrefix(), command.awv, new String[][]{{argument.reload}}));
 
-        //EXECUTE COMMAND
+        // EXECUTE COMMAND
         // Check command
         if (!cmd.getName().equalsIgnoreCase(command.awv)) return false;
 
@@ -64,7 +64,7 @@ public class ReloadCommand implements CommandExecutor, TabCompleter {
         }
     }
 
-    //EXECUTE TAB-COMPLETE
+    // EXECUTE TAB-COMPLETE
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         if (!cmd.getName().equalsIgnoreCase(command.awv) || !sender.hasPermission(perm.reload)) return Collections.emptyList();

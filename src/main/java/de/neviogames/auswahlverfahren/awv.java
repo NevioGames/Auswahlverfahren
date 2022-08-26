@@ -3,7 +3,7 @@ package de.neviogames.auswahlverfahren;
 import de.neviogames.auswahlverfahren.commands.JoinCommand;
 import de.neviogames.auswahlverfahren.commands.LeaveCommand;
 import de.neviogames.auswahlverfahren.commands.auswahlCommand;
-import de.neviogames.auswahlverfahren.commands.reloadCommand;
+import de.neviogames.auswahlverfahren.commands.ReloadCommand;
 import de.neviogames.auswahlverfahren.utils.Configuration;
 import de.neviogames.auswahlverfahren.utils.database;
 import lombok.Getter;
@@ -84,7 +84,7 @@ public class awv extends JavaPlugin {
 
     private void registerCMD() {
         new auswahlCommand();
-        new reloadCommand();
+        new ReloadCommand();
         new JoinCommand();
         new LeaveCommand();
     }
