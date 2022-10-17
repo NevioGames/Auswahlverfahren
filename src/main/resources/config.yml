@@ -76,3 +76,11 @@ settings:
       team: "hufflepuff"
       group: 1
 
+  forbiddenPlayers:
+    - "ea79c0e5-8672-4edb-ac1e-fab4f3c4a8f6"
+    - "864d5fee-de9a-4cb0-b5da-355c2235b1e5"
+    - "ab8e8847-9bce-41ba-bee1-10db907b0f0a"
+    - "0bae288d-0bcd-4f94-a55c-8d781fe0e4e3"
+    - "69249554-eaab-4f5b-996c-0674ad9df298"
+    - "096e5dbc-6ddd-44ca-9907-b9c1cbc1d79a"
+    - "55027b47-d04e-4143-b247-b7675854d635"

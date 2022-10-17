@@ -29,6 +29,7 @@ public final class Configuration {
     private List<NGEventGroup> groups;
 
     private Map<String, List<NGEventFixedPlayer>> fixedPlayers;
+    private List<UUID> forbiddenPlayers;
 
     // load values from config
     public boolean load() {
@@ -71,6 +72,8 @@ public final class Configuration {
                 fixedPlayers.put(team, fp);
             });
 
+            configuration.getStringList("settings.forbiddenPlayers").forEach(player ->
+                    forbiddenPlayers.add(UUID.fromString(player)));
 
             return true;
         } catch (Throwable t) {

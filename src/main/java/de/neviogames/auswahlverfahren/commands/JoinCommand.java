@@ -58,9 +58,15 @@ public class JoinCommand implements CommandExecutor, TabCompleter {
         // Check for previous participation
         if (Configuration.getInstance().isDenyFormerCandidates()) {
             if (database.isFormerCandidate(uuid)) {
-                sender.sendMessage(awv.getPrefix() + "Du kannst dich leider für dieses Event nicht bewerben, da du zuvor schon an einem Event(" + database.getFormerCandidateEvent(uuid) + ") teilgenommen hast.");
+                sender.sendMessage(awv.getPrefix() + "Du kannst dich leider f"+utility.ue+"r dieses Event nicht bewerben, da du zuvor schon an einem Event(" + database.getFormerCandidateEvent(uuid) + ") teilgenommen hast.");
                 return true;
             }
+        }
+
+        // Check for forbidden players
+        if (Configuration.getInstance().getForbiddenPlayers().contains(uuid)) {
+            sender.sendMessage(awv.getPrefix() + "Du kannst dich leider f"+utility.ue+"r dieses Event nicht bewerben, da du zum Event-Team geh"+utility.oe+"rst.");
+            return true;
         }
 
         // Check argument length
