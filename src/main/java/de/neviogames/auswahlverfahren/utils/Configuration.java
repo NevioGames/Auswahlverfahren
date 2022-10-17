@@ -8,10 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -40,6 +37,7 @@ public final class Configuration {
             denyFormerCandidates = configuration.getBoolean("settings.denyFormerCandidates");
 
             teamSelectMode = configuration.getString("settings.teamSelectMode").toLowerCase();
+            teams = new HashMap<>();
             configuration.getConfigurationSection("settings.teams").getKeys(false).forEach(team -> {
                 if (!configuration.getBoolean("settings.teams."+team+".enabled")) return;
                 teams.put(team, new NGEventTeam(
@@ -49,6 +47,7 @@ public final class Configuration {
                 ));
             });
 
+            groups = new ArrayList<>();
             configuration.getConfigurationSection("settings.groups").getKeys(false).forEach(group -> {
                 if (!configuration.getBoolean("settings.groups."+group+".enabled")) return;
                 if (!utility.isNumber(group)) throw new NumberFormatException();
@@ -59,6 +58,7 @@ public final class Configuration {
                 ));
             });
 
+            fixedPlayers = new HashMap<>();
             configuration.getConfigurationSection("settings.fixedPlayers").getKeys(false).forEach(player -> {
                 if (!configuration.getBoolean("settings.fixedPlayers."+player+".enabled")) return;
                 final String team = configuration.getString("settings.fixedPlayers." + player + ".team");
@@ -72,6 +72,7 @@ public final class Configuration {
                 fixedPlayers.put(team, fp);
             });
 
+            forbiddenPlayers = new ArrayList<>();
             configuration.getStringList("settings.forbiddenPlayers").forEach(player ->
                     forbiddenPlayers.add(UUID.fromString(player)));
 
