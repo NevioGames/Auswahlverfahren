@@ -57,8 +57,9 @@ public class JoinCommand implements CommandExecutor, TabCompleter {
 
         // Check for previous participation
         if (Configuration.getInstance().isDenyFormerCandidates()) {
-            if (database.isFormerCandidate(uuid)) {
-                sender.sendMessage(awv.getPrefix() + "Du kannst dich leider f"+utility.ue+"r dieses Event nicht bewerben, da du zuvor schon an einem Event(" + database.getFormerCandidateEvent(uuid) + ") teilgenommen hast.");
+            String event = database.getFormerCandidateEvent(uuid);
+            if (!Util.isNullOrEmpty(event)) {
+                sender.sendMessage(awv.getPrefix() + "Du kannst dich leider f"+utility.ue+"r dieses Event nicht bewerben, da du zuvor beim Event '" + event + "' teilgenommen hast.");
                 return true;
             }
         }
@@ -90,7 +91,6 @@ public class JoinCommand implements CommandExecutor, TabCompleter {
         NGEventCandidate candidate = new NGEventCandidate(player, builder.toString().trim(), NGEventTeam.getTeam(player));
 
         if (candidate.getTeam() == null) {
-            //TODO OPEN SELECT TEAM INVENTORY (and remove error message)
             sender.sendMessage(awv.getPrefix() + "Es ist ein Fehler aufgetreten. Bitte wende dich an ein Teammitglied.");
             return true;
         }

@@ -3,7 +3,10 @@ package de.neviogames.auswahlverfahren.utils;
 import de.neviogames.auswahlverfahren.awv;
 import de.neviogames.nglib.utils.ds.DataSource;
 import de.neviogames.nglib.utils.io.ErrorHandle;
+import lombok.Cleanup;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +16,16 @@ import java.util.UUID;
 public class database {
 
     public static void createTable() {
-        DataSource.createTable("CREATE TABLE IF NOT EXISTS Auswahlevent (UUID VARCHAR(50), house VARCHAR(25), contact VARCHAR(120), time BIGINT, whitelist INT)");
+        DataSource.createTable("CREATE TABLE IF NOT EXISTS Auswahlevent (" +
+                "UUID VARCHAR(50), " +
+                "house VARCHAR(25), " +
+                "contact VARCHAR(120), " +
+                "time BIGINT, " +
+                "whitelist INT)");
     }
 
     public static void add(NGEventCandidate candidate) {
-        DataSource.update("INSERT INTO Auswahlevent(UUID, house, contact, time, whitelist) VALUES ('"+candidate.getUniqueId().toString()+"', '"+candidate.getTeam().getName()+"', '"+candidate.getContact()+"', '"+candidate.getTimestamp()+"', '"+candidate.getWhitelistId()+"')");
+        DataSource.update("INSERT INTO Auswahlevent(UUID, house, contact, time, whitelist) VALUES ('"+candidate.getUniqueId().toString()+"', '"+candidate.getTeam().getName().toUpperCase()+"', '"+candidate.getContact()+"', '"+candidate.getTimestamp()+"', '"+candidate.getWhitelistId()+"')");
     }
 
     public static void remove(UUID uuid) {
@@ -52,7 +60,12 @@ public class database {
 
 
     public static void createTableFormerEventCandidates() {
-        DataSource.createTable("CREATE TABLE IF NOT EXISTS FormerEventCandidates (UUID VARCHAR(50), house VARCHAR(25), time BIGINT, event VARCHAR(50), FreigegebenAb VARCHAR(255))");
+        DataSource.createTable("CREATE TABLE IF NOT EXISTS FormerEventCandidates (" +
+                "UUID VARCHAR(50), " +
+                "house VARCHAR(25), " +
+                "time BIGINT, " +
+                "event VARCHAR(50), " +
+                "FreigegebenAb VARCHAR(255))");
     }
 
     public static boolean isFormerCandidate(UUID uuid) {
@@ -60,7 +73,30 @@ public class database {
     }
 
     public static String getFormerCandidateEvent (UUID uuid) {
-        return DataSource.getStringResult("FormerEventCandidates",  "event", uuid);
+        if (Util.isNullOrEmpty(Configuration.getInstance().getBannedEvents())) return null;
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT event FROM FormerEventCandidates WHERE UUID='").append(uuid).append("'");
+        boolean first = true;
+        for (String event : Configuration.getInstance().getBannedEvents()) {
+            if (first) {
+                sql.append(" AND (event='").append(event).append("'");
+                first = false;
+            } else {
+                sql.append(" OR event='").append(event).append("'");
+            }
+        }
+        sql.append(")");
+        try {
+            @Cleanup Connection con = DataSource.hikari.getConnection();
+            @Cleanup PreparedStatement st = con.prepareStatement(sql.toString());
+            @Cleanup ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getString("event");
+            }
+        } catch (Throwable e) {
+            ErrorHandle.error(ErrorHandle.cs, e, awv.getPrefix());
+        }
+        return null;
     }
 
     public static ArrayList<UUID> getAllFormerCandidates(NGEventTeam team) {

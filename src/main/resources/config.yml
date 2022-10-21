@@ -30,6 +30,11 @@ settings:
   eventName: ''
   # Deny former candidates
   denyFormerCandidates: true
+  # Participants of the following events are not allowed to apply
+  bannedEvents:
+    - '1300'
+    - '1400-1'
+    - '1600'
 
   # Possible Values: "perm", "select", "auto", "rank"
   # Rank use the rank on dagilp.net

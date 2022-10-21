@@ -20,6 +20,7 @@ public final class Configuration {
     private boolean isApplicationPhase;
     private String eventName;
     private boolean denyFormerCandidates;
+    private List<String> bannedEvents;
 
     private String teamSelectMode;
     private Map<String, NGEventTeam> teams;
@@ -35,6 +36,7 @@ public final class Configuration {
             isApplicationPhase = configuration.getBoolean("settings.applicationPhase");
             eventName = configuration.getString("settings.eventName");
             denyFormerCandidates = configuration.getBoolean("settings.denyFormerCandidates");
+            bannedEvents = configuration.getStringList("settings.bannedEvents");
 
             teamSelectMode = configuration.getString("settings.teamSelectMode").toLowerCase();
             teams = new HashMap<>();
