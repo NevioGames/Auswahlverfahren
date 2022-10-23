@@ -45,10 +45,12 @@ public class database {
     }
 
 
-    public static ArrayList<UUID> getAllMembers(NGEventTeam team) { //TODO TESTEN ANSONSTEN METHODE 2 BENUTZEN
+    public static ArrayList<UUID> getAllMembers(NGEventTeam team) {
         ArrayList<UUID> list = new ArrayList<>();
         try {
-            ResultSet rs = DataSource.getResult("SELECT UUID FROM Auswahlevent WHERE house='"+team.getName()+"' AND whitelist='0'");
+            @Cleanup Connection con = DataSource.hikari.getConnection();
+            @Cleanup PreparedStatement st = con.prepareStatement("SELECT UUID FROM Auswahlevent WHERE house='"+team.getName()+"' AND whitelist='0'");
+            @Cleanup ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 list.add(UUID.fromString(rs.getString("UUID")));
             }
@@ -57,7 +59,6 @@ public class database {
         }
         return list;
     }
-
 
     public static void createTableFormerEventCandidates() {
         DataSource.createTable("CREATE TABLE IF NOT EXISTS FormerEventCandidates (" +

@@ -6,6 +6,7 @@ import de.neviogames.nglib.utils.utility;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.*;
@@ -62,7 +63,7 @@ public final class Configuration {
                 groups.add(new NGEventGroup(
                         Integer.parseInt(group),
                         configuration.getInt("settings.groups." + group + ".groupSize"),
-                        configuration.getString("settings.groups." + group + ".selectionText")
+                        ChatColor.translateAlternateColorCodes('&', configuration.getString("settings.groups." + group + ".selectionText"))
                 ));
             });
 

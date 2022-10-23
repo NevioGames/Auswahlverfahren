@@ -38,7 +38,7 @@ public class auswahlCommand implements CommandExecutor, TabCompleter {
 
         //EXECUTE COMMAND
         // Check command
-        if (cmd.getName().equalsIgnoreCase(command.auswahl)) return false;
+        if (!cmd.getName().equalsIgnoreCase(command.auswahl)) return false;
 
         // Check sender has permission
         if (!sender.hasPermission(perm.auswahl)) {

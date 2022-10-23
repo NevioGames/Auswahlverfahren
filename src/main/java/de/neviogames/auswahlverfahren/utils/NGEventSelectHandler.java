@@ -1,11 +1,13 @@
 package de.neviogames.auswahlverfahren.utils;
 
 import de.neviogames.auswahlverfahren.awv;
+import de.neviogames.auswahlverfahren.inventory.ItemAPIv2;
 import de.neviogames.nglib.utils.io.MathUtil;
 import de.neviogames.nglib.utils.misc.FormatUtil;
 import de.neviogames.nglib.utils.utility;
 import lombok.Getter;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 
@@ -44,7 +46,8 @@ public class NGEventSelectHandler {
 
     private Map<Integer, List<UUID>> initFixedPlayers() {
         Map<Integer, List<UUID>> fixedPlayer = new HashMap<>();
-        if (Configuration.getInstance().getFixedPlayers().containsKey(this.team.getName())) return fixedPlayer;
+        if (Util.isNullOrEmpty(Configuration.getInstance().getFixedPlayers())) return fixedPlayer;
+        if (!Configuration.getInstance().getFixedPlayers().containsKey(this.team.getName())) return fixedPlayer;
         Configuration.getInstance().getFixedPlayers().get(this.team.getName()).forEach(fp -> {
             List<UUID> uuids = fixedPlayer.getOrDefault(fp.getGroup(), new ArrayList<>());
             uuids.add(fp.getUniqueId());
@@ -54,8 +57,9 @@ public class NGEventSelectHandler {
     }
 
     // Check team size
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean hasTeamEnoughPlayer() {
-        if (this.randomList.size() < this.minTeamSize) {
+        if (this.randomList.size()+this.fixedPlayer.size() < this.minTeamSize) {
             this.sender.sendMessage(awv.getPrefix() + ChatColor.RED+ "Es haben sich nicht genug Spieler im Haus " +this.team.getColor()+ this.team.getDisplayName()+ChatColor.RED+ " beworben.");
             return false;
         }
@@ -78,7 +82,7 @@ public class NGEventSelectHandler {
 
     private String select(NGEventGroup group) {
         StringBuilder page = new StringBuilder(group.getFormattedSelectionText(this.team) + "\n\n");
-        int totalFixedPlayers = this.fixedPlayer.get(group.getGroupId()).size();
+        int totalFixedPlayers = this.fixedPlayer.containsKey(group.getGroupId()) ? this.fixedPlayer.get(group.getGroupId()).size() : 0;
 
         for (int i = 0; i < group.getGroupSize(); i++) {
             UUID candidateUUID;
@@ -114,7 +118,7 @@ public class NGEventSelectHandler {
 
             StringBuilder saveText = new StringBuilder();
             for (int i = 0; i < candidateString.length; i++) {
-                saveText.append(new SimpleDateFormat("dd.MM.yyyy hh:mm:ss").format(System.currentTimeMillis()))
+                saveText.append(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(System.currentTimeMillis()))
                         .append(" - Team: ").append(this.team.getDisplayName())
                         .append(" - Group: ").append(i+1)
                         .append("\n")

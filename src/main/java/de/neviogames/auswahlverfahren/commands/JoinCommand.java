@@ -1,21 +1,23 @@
 package de.neviogames.auswahlverfahren.commands;
 
 import de.neviogames.auswahlverfahren.awv;
-import de.neviogames.auswahlverfahren.utils.*;
 import de.neviogames.auswahlverfahren.edits.argument;
 import de.neviogames.auswahlverfahren.edits.command;
 import de.neviogames.auswahlverfahren.edits.perm;
+import de.neviogames.auswahlverfahren.utils.*;
 import de.neviogames.nglib.utils.io.sendMessage;
 import de.neviogames.nglib.utils.utility;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 public class JoinCommand implements CommandExecutor, TabCompleter {
 
@@ -33,11 +35,12 @@ public class JoinCommand implements CommandExecutor, TabCompleter {
 
         // EXECUTE COMMAND
         // Check command
-        if (cmd.getName().equalsIgnoreCase(command.joinEvent)) return false;
+        if (!cmd.getName().equalsIgnoreCase(command.joinEvent)) return false;
 
         // Check is Plugin in config enabled
         if (!Configuration.getInstance().isApplicationPhase()) {
             sender.sendMessage(awv.getPrefix() + "Es gibt zurzeit kein Event Bewerbungsphase.");
+            return true;
         }
 
         // Check sender has permission
