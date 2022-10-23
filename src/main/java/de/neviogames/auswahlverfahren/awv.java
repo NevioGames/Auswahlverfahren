@@ -4,11 +4,14 @@ import de.neviogames.auswahlverfahren.commands.JoinCommand;
 import de.neviogames.auswahlverfahren.commands.LeaveCommand;
 import de.neviogames.auswahlverfahren.commands.auswahlCommand;
 import de.neviogames.auswahlverfahren.commands.ReloadCommand;
+import de.neviogames.auswahlverfahren.listener.InventoryClick;
+import de.neviogames.auswahlverfahren.listener.InventoryClose;
 import de.neviogames.auswahlverfahren.utils.Configuration;
 import de.neviogames.auswahlverfahren.utils.database;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -48,7 +51,10 @@ public class awv extends JavaPlugin {
         createMysqlTables();
 
         //Load Commands
-        registerCMD();
+        registerCommands();
+
+        //Load Listener
+        registerListener();
 
         logEndMessage("Loaded");
     }
@@ -82,10 +88,16 @@ public class awv extends JavaPlugin {
         database.createTableFormerEventCandidates();
     }
 
-    private void registerCMD() {
+    private void registerCommands() {
         new auswahlCommand();
         new ReloadCommand();
         new JoinCommand();
         new LeaveCommand();
+    }
+
+    private void registerListener() {
+        PluginManager pm = Bukkit.getPluginManager();
+        pm.registerEvents(new InventoryClick(), this);
+        pm.registerEvents(new InventoryClose(), this);
     }
 }

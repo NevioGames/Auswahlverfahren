@@ -3,7 +3,8 @@ package de.neviogames.auswahlverfahren.utils;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
 
 public class Util {
 
@@ -27,4 +28,10 @@ public class Util {
         return free;
     }
 
+    public static String cutString(String string, int length) {
+        if (string.length() > length) {
+            string = string.substring(0, (length-1));
+        }
+        return string;
+    }
 }

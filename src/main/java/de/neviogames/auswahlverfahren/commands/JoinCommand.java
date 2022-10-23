@@ -95,12 +95,8 @@ public class JoinCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        //TODO OPEN CONFIRMATION INVENTORY
-
-        // Put player into database, send success messages
-        database.add(candidate);
-        sender.sendMessage(awv.getPrefix() + "Du hast dich erfolgreich als Teilnehmer für das Haus "+candidate.getTeam().getColor()+candidate.getTeam().getDisplayName()+ ChatColor.GRAY+" beworben.");
-        awv.getInstance().getLogger().info(uuid + " hat sich beim Event f"+utility.ue+"r das Haus " + candidate.getTeam().getDisplayName() + " beworben");
+        //Open confirmation inventory
+        new NGEventInventoryHandler(player, candidate).open();
         return true;
     }
 

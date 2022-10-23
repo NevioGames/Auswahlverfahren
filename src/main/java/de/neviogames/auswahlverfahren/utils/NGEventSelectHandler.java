@@ -137,12 +137,12 @@ public class NGEventSelectHandler {
     }
 
     public ItemStack getBook(String[] candidateString) {
-        BookAPI book = new BookAPI();
-        book.setAuthor(ChatColor.AQUA+"Auswahlverfahren");
-        book.setDisplayName(""+this.team.getColor()+ChatColor.BOLD+this.team.getDisplayName());
-        book.setTitle("Die Auserw"+utility.ae+"hlten von " +this.team.getColor()+ this.team.getDisplayName());
-        book.setPages(candidateString);
-        return book.create();
+        return new ItemAPIv2(Material.WRITTEN_BOOK)
+                .setBookAuthor(ChatColor.AQUA+"Auswahlverfahren")
+                .setDisplayName(""+this.team.getColor()+ChatColor.BOLD+this.team.getDisplayName())
+                .setBookTitle("Die Auserw"+utility.ae+"hlten von " +this.team.getColor()+ this.team.getDisplayName())
+                .setBookPages(candidateString)
+                .toItemStack();
     }
 
 

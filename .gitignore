@@ -33,6 +33,7 @@ out
 gen
 
 ### Maven template
+test/
 target/
 pom.xml.tag
 pom.xml.releaseBackup

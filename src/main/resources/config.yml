@@ -28,6 +28,12 @@ settings:
   applicationPhase: false
   # Name of the event
   eventName: ''
+  # Date and time for the inventory confirm
+  eventDate:
+    date: '13.11.2022'
+    time:
+      from: '12:00'
+      to: '18:00'
   # Deny former candidates
   denyFormerCandidates: true
   # Participants of the following events are not allowed to apply

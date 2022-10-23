@@ -19,6 +19,9 @@ public final class Configuration {
 
     private boolean isApplicationPhase;
     private String eventName;
+    private String eventDate;
+    private String eventTimeFrom;
+    private String eventTimeTo;
     private boolean denyFormerCandidates;
     private List<String> bannedEvents;
 
@@ -35,6 +38,9 @@ public final class Configuration {
             FileConfiguration configuration = awv.getPlugin(awv.class).getConfig();
             isApplicationPhase = configuration.getBoolean("settings.applicationPhase");
             eventName = configuration.getString("settings.eventName");
+            eventDate = configuration.getString("settings.eventDate.date");
+            eventTimeFrom = configuration.getString("settings.eventDate.time.from");
+            eventTimeTo = configuration.getString("settings.eventDate.time.to");
             denyFormerCandidates = configuration.getBoolean("settings.denyFormerCandidates");
             bannedEvents = configuration.getStringList("settings.bannedEvents");
 
