@@ -12,7 +12,7 @@
 ######################################################################
 
 # If you want to use special characters in this document, such as accented letters, you MUST save the file as UTF-8, not ANSI.
-# If you receive an error when NGAdmin loads, ensure that:
+# If you receive an error when Auswahlverfahren loads, ensure that:
 #   - No tabs are present: YAML only allows spaces
 #   - Indents are correct: YAML hierarchy is based entirely on indentation
 #   - You have "escaped" all apostrophes in your text: If you want to write "don't", for example, write "don''t" instead (note the doubled apostrophe)
@@ -30,10 +30,10 @@ settings:
   eventName: ''
   # Date and time for the inventory confirm
   eventDate:
-    date: '13.11.2022'
+    date: 'dd.MM.yyyy'
     time:
-      from: '12:00'
-      to: '18:00'
+      from: 'HH:mm'
+      to: 'HH:mm'
   # Deny former candidates
   denyFormerCandidates: true
   # Participants of the following events are not allowed to apply
