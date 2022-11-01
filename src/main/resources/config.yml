@@ -12,7 +12,7 @@
 ######################################################################
 
 # If you want to use special characters in this document, such as accented letters, you MUST save the file as UTF-8, not ANSI.
-# If you receive an error when NGAdmin loads, ensure that:
+# If you receive an error when Auswahlverfahren loads, ensure that:
 #   - No tabs are present: YAML only allows spaces
 #   - Indents are correct: YAML hierarchy is based entirely on indentation
 #   - You have "escaped" all apostrophes in your text: If you want to write "don't", for example, write "don''t" instead (note the doubled apostrophe)
@@ -25,22 +25,73 @@
 ######################################################################
 
 settings:
-  # Is event enabled
-  enable: false
-  # Is Daniel playing
-  dagiPlay: false
+  applicationPhase: false
   # Name of the event
-  eventName: '1400'
+  eventName: ''
+  # Date and time for the inventory confirm
+  eventDate:
+    date: 'dd.MM.yyyy'
+    time:
+      from: 'HH:mm'
+      to: 'HH:mm'
   # Deny former candidates
   denyFormerCandidates: true
-  # Need a second team
-  secondTeam: true
-  # %houseColor = replace with the house color
-  # %house = replace with the house
-  selectionText1: "Folgende Spieler haben sich für die &c&lerste Aufgabe &0im Haus %houseColor%house &0qualifiziert:"
-  selectionText2: "Folgende Spieler haben sich für die &2&lzweite Aufgabe &0im Haus %houseColor%house &0qualifiziert:"
-  # Set the team size
-  teamSize1: 4
-  teamSize2: 4
-  # Can muggle join the event
-  onlyWizards: true
+  # Participants of the following events are not allowed to apply
+  bannedEvents:
+    - '1300'
+    - '1400-1'
+    - '1600'
+
+  # Possible Values: "perm", "select", "auto", "rank"
+  # Rank use the rank on dagilp.net
+  # Perm use the perm "nge.team.{team}" {team} replaced by the team
+  teamSelectMode: "rank"
+  teams:
+    gryffindor:
+      enabled: true
+      display: "Gryffindor"
+      color: "&c"
+    ravenclaw:
+      enabled: true
+      display: "Ravenclaw"
+      color: "&9"
+    hufflepuff:
+      enabled: true
+      display: "Hufflepuff"
+      color: "&e"
+    slytherin:
+      enabled: true
+      display: "Slytherin"
+      color: "&a"
+
+  groups:
+    1:
+      # Always true
+      enabled: true
+      groupSize: 4
+      # %color = replace with the team color
+      # %display = replace with the team display name
+      selectionText: "Folgende Spieler haben sich für im Haus %color%display &0qualifiziert:"
+      # selectionText: "Folgende Spieler haben sich für die &c&lerste Aufgabe &0im Haus %color%display &0qualifiziert:"
+    2:
+      enabled: false
+      groupSize: 4
+      # %houseColor = replace with the house color
+      # %house = replace with the house
+      selectionText: "Folgende Spieler haben sich für die &9&lzweite Aufgabe &0im Haus %color%display &0qualifiziert:"
+
+  fixedPlayers:
+    # Is Daniel playing
+    9d83e353-e60c-4eb8-a036-e9ae0436f343:
+      enabled: false
+      team: "hufflepuff"
+      group: 1
+
+  forbiddenPlayers:
+    - "ea79c0e5-8672-4edb-ac1e-fab4f3c4a8f6"
+    - "864d5fee-de9a-4cb0-b5da-355c2235b1e5"
+    - "ab8e8847-9bce-41ba-bee1-10db907b0f0a"
+    - "0bae288d-0bcd-4f94-a55c-8d781fe0e4e3"
+    - "69249554-eaab-4f5b-996c-0674ad9df298"
+    - "096e5dbc-6ddd-44ca-9907-b9c1cbc1d79a"
+    - "55027b47-d04e-4143-b247-b7675854d635"
